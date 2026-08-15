@@ -97,7 +97,7 @@ const initialContactsData = [
     { name: '이장훈', role: '상무', phone: '010-6353-1482', memo: '' },
     { name: '정영권', role: '팀장', phone: '010-8688-0201', memo: '' },
     { name: '진영훈', role: '과장', phone: '010-5781-0064', memo: '' },
-    { name: '최준혁', role: '대리', phone: '0109916-1052', memo: '' }
+    { name: '최준혁', role: '대리', phone: '010-9916-1052', memo: '' }
 ];
 const initialBoardData = [
     { title: '중요: DW-300A 품질 승인 서류 보완 요청', content: '삼성 측 전달 용품 품질 검사 증명서 작성 시 트루컬러 표기 항목 다시 점검할 것.' }
@@ -287,8 +287,11 @@ function getStatusClass(val) {
 }
 
 window.onload = function() {
-    // 새로고침 시 로그인 토큰이 있으면 포털 화면을 바로 유지
-    if (accessToken) {
+    // 💡 핵심: 저장된 토큰이 없으면 랜딩 화면을 띄우고, 있으면 포털을 유지함!
+    if (!accessToken) {
+        document.getElementById('landingScreen').style.display = 'flex';
+        document.getElementById('portalContent').style.display = 'none';
+    } else {
         document.getElementById('landingScreen').style.display = 'none';
         document.getElementById('portalContent').style.display = 'block';
     }
