@@ -2,7 +2,7 @@ const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleuser
 const SCOPES = 'https://www.googleapis.com/auth/drive';
 let accessToken = localStorage.getItem('quality_access_token') || null;
 
-// 1. 랜딩 화면 버튼 상태 제어
+// [1] 랜딩 UI 업데이트 (로그인 상태에 따라 버튼 제어)
 function updateLandingUI() {
     const isLogin = !!accessToken;
     const gBtn = document.getElementById('landingGoogleBtn');
@@ -18,7 +18,7 @@ function updateLandingUI() {
     if (enterBtn) enterBtn.style.display = isLogin ? 'flex' : 'none';
 }
 
-// 2. 구글 로그인 실행
+// [2] 구글 로그인 실행
 function triggerGoogleLogin() {
     const tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
@@ -35,19 +35,21 @@ function triggerGoogleLogin() {
     tokenClient.requestAccessToken({ prompt: 'consent' });
 }
 
-// 3. 포털 입장 및 랜딩 복귀
+// [3] 포털 입장 및 화면 전환
 function enterPortal() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     document.getElementById('landingScreen').style.display = 'none';
     document.getElementById('portalContent').style.display = 'block';
     updateLandingUI();
-    if(typeof refreshAllWidths === 'function') setTimeout(refreshAllWidths, 50);
+    if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
+    if (typeof renderRecentVisitedPages === 'function') renderRecentVisitedPages();
+    if (typeof refreshAllWidths === 'function') setTimeout(refreshAllWidths, 50);
 }
 
 function goToLandingScreen() {
     document.getElementById('portalContent').style.display = 'none';
     document.getElementById('landingScreen').style.display = 'flex';
-    updateLandingUI();
+    updateLandingUI(); 
 }
 
 function logoutToLanding() {
@@ -59,7 +61,47 @@ function logoutToLanding() {
     location.reload();
 }
 
-// [동기화 로직]
+// [4] 탭 전환 및 네비게이션 함수 (버튼 먹통 방지)
+function switchTab(tabId, btnElement) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    const targetTab = document.getElementById('tab-' + tabId);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+
+    if (btnElement) {
+        document.querySelectorAll('.nav-menu .nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        btnElement.classList.add('active');
+    }
+
+    if (typeof recordVisitedPage === 'function') {
+        recordVisitedPage(tabId);
+    }
+
+    if (typeof refreshAllWidths === 'function') {
+        setTimeout(refreshAllWidths, 50);
+    }
+}
+
+function navigateToTab(tabId) {
+    const navButtons = document.querySelectorAll('.nav-menu .nav-btn');
+    let targetBtn = null;
+    
+    navButtons.forEach(btn => {
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick'].includes(tabId)) {
+            targetBtn = btn;
+        }
+    });
+
+    switchTab(tabId, targetBtn);
+}
+
+// [5] 구글 드라이브 동기화 및 백업
 async function syncAllToDrive() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     const data = {
@@ -123,41 +165,47 @@ async function importAllFromDrive() {
     } catch (e) { alert("불러오기 실패: " + e.message); }
 }
 
-// [초기 로드] - 💡 올바른 화면 분기 처리
+// [6] 초기 로드 및 데이터 렌더링
 window.onload = function() {
     updateLandingUI();
     
-    // 1. 데이터들을 먼저 화면에 싹 그려줍니다.
     try {
-        (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
-        (JSON.parse(localStorage.getItem('quality_contacts_data_v6')) || initialContactsData).forEach(item => addContactRow(item));
+        if (typeof initialScheduleData !== 'undefined') {
+            (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
+        }
+        if (typeof initialContactsData !== 'undefined') {
+            (JSON.parse(localStorage.getItem('quality_contacts_data_v6')) || initialContactsData).forEach(item => addContactRow(item));
+        }
         if (localStorage.getItem('quality_contacts_lock') === 'true') {
             isGlobalLocked = true;
             const lockBtn = document.getElementById('globalLockBtn');
             if (lockBtn) { lockBtn.textContent = '수정'; lockBtn.classList.add('active'); }
             document.querySelectorAll('#contactsTableBody tr input[type="text"]').forEach(input => input.disabled = true);
         }
-        (JSON.parse(localStorage.getItem('quality_board_data')) || initialBoardData).forEach(item => addBoardPost(item));
-        (JSON.parse(localStorage.getItem('quality_nonconformity_data')) || initialNonConformData).forEach(item => addNonConformPost(item));
-        (JSON.parse(localStorage.getItem('quality_autocad_data')) || initialAutocadData).forEach(item => addAutocadPost(item));
-        renderDocs(JSON.parse(localStorage.getItem('quality_docs_data')) || initialDocsData);
-        
+        if (typeof initialBoardData !== 'undefined') {
+            (JSON.parse(localStorage.getItem('quality_board_data')) || initialBoardData).forEach(item => addBoardPost(item));
+        }
+        if (typeof initialNonConformData !== 'undefined') {
+            (JSON.parse(localStorage.getItem('quality_nonconformity_data')) || initialNonConformData).forEach(item => addNonConformPost(item));
+        }
+        if (typeof initialAutocadData !== 'undefined') {
+            (JSON.parse(localStorage.getItem('quality_autocad_data')) || initialAutocadData).forEach(item => addAutocadPost(item));
+        }
+        if (typeof initialDocsData !== 'undefined') {
+            renderDocs(JSON.parse(localStorage.getItem('quality_docs_data')) || initialDocsData);
+        }
+
         const savedMemo = localStorage.getItem('quality_memo_data');
         if (savedMemo) document.getElementById('memoArea').value = savedMemo;
-        
+
         if (typeof resetIdleTimer === 'function') resetIdleTimer();
         if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
         if (typeof renderRecentVisitedPages === 'function') renderRecentVisitedPages();
     } catch (e) {
-        console.error("데이터 로드 중 오류 발생:", e);
+        console.error("초기 데이터 렌더링 오류:", e);
     }
 
-    // 2. 데이터가 다 그려진 후, 로그인 상태에 따라 화면을 보여줍니다.
     if (accessToken) {
-        // 로그인이 되어 있다면 사용자가 직접 HOME 버튼을 누르거나 할 때까지 
-        // 혹은 원하실 때 랜딩에 머물 수 있도록 랜딩을 기본으로 두고 
-        // 자동 전환을 원치 않으시면 아래 줄을 조절할 수 있습니다.
-        // 현재는 로그인 상태면 바로 본문이 보이되, 데이터가 채워진 상태로 뜹니다.
         document.getElementById('landingScreen').style.display = 'none';
         document.getElementById('portalContent').style.display = 'block';
     } else {
@@ -167,10 +215,12 @@ window.onload = function() {
 
     if (typeof refreshAllWidths === 'function') refreshAllWidths();
 };
+
+// [7] 기존 기능 함수들
 function getDayOfWeek(dateString) {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return isNaN(date.getDay()) ? '-' : DAYS[date.getDay()];
+    return isNaN(date.getDay()) ? '-' : (typeof DAYS !== 'undefined' ? DAYS[date.getDay()] : ['일','월','화','수','목','금','토'][date.getDay()]);
 }
 
 function createSelectHTML(options, selectedValue, className = '') {
@@ -181,17 +231,23 @@ function createSelectHTML(options, selectedValue, className = '') {
 
 function addRow(data = {}) {
     const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
     const tr = document.createElement('tr');
     const completed = data.completed || false;
     const date = data.date || new Date().toISOString().substring(0, 10);
     if (completed) tr.classList.add('completed');
+    
+    const catOpts = typeof CONFIG !== 'undefined' ? CONFIG.categoryOptions : [];
+    const perOpts = typeof CONFIG !== 'undefined' ? CONFIG.personOptions : [];
+    const staOpts = typeof CONFIG !== 'undefined' ? CONFIG.statusOptions : [];
+
     tr.innerHTML = `
         <td style="text-align: center;"><input type="checkbox" ${completed ? 'checked' : ''} onchange="toggleComplete(this)"></td>
         <td><input type="date" value="${date}" onchange="updateDay(this)" style="width: 120px; min-width: 120px;"></td>
         <td class="day-cell">${getDayOfWeek(date)}</td>
-        <td style="text-align: center;"><div style="display:inline-block; width:110px; min-width:110px;">${createSelectHTML(CONFIG.categoryOptions, data.category || CONFIG.categoryOptions[0])}</div></td>
-        <td style="text-align: center;"><div style="display:inline-block; width:100px; min-width:100px;">${createSelectHTML(CONFIG.personOptions, data.person || CONFIG.personOptions[0])}</div></td>
-        <td style="text-align: center;"><div style="display:inline-block; width:90px; min-width:90px;">${createSelectHTML(CONFIG.statusOptions, data.status || CONFIG.statusOptions[0], 'status-select')}</div></td>
+        <td style="text-align: center;"><div style="display:inline-block; width:110px; min-width:110px;">${createSelectHTML(catOpts, data.category || catOpts[0])}</div></td>
+        <td style="text-align: center;"><div style="display:inline-block; width:100px; min-width:100px;">${createSelectHTML(perOpts, data.person || perOpts[0])}</div></td>
+        <td style="text-align: center;"><div style="display:inline-block; width:90px; min-width:90px;">${createSelectHTML(staOpts, data.status || staOpts[0], 'status-select')}</div></td>
         <td><input type="text" value="${data.content || ''}" placeholder="업무 내용을 입력하세요" style="width: 280px; min-width: 280px;" oninput="refreshAllWidths()"></td>
         <td><input type="text" value="${data.note || ''}" placeholder="비고" style="width: 140px; min-width: 140px;" oninput="refreshAllWidths()"></td>
         <td style="text-align: center;"><button class="btn-delete" onclick="openDeleteModal(this, 'standard')">삭제</button></td>
@@ -212,7 +268,7 @@ function updateDay(dateInput) {
 }
 
 function updateStyle(selectElem) {
-    if (!selectElem.classList.contains('status-select')) return;
+    if (!selectElem || !selectElem.classList.contains('status-select')) return;
     selectElem.className = 'status-select clean-select';
     const val = selectElem.value;
     if (val === '대기') selectElem.classList.add('pending');
@@ -278,6 +334,7 @@ function copyTipContent(btn) {
 
 function addAutocadPost(data = {}) {
     const container = document.getElementById('autocadContainer');
+    if (!container) return;
     const card = document.createElement('div');
     card.className = 'board-card';
     card.innerHTML = `
@@ -313,6 +370,7 @@ function saveAutocadPosts() {
 
 function addBoardPost(data = {}) {
     const container = document.getElementById('boardContainer');
+    if (!container) return;
     const card = document.createElement('div');
     card.className = 'board-card';
     card.innerHTML = `
@@ -347,6 +405,7 @@ function saveBoardPosts() {
 
 function addNonConformPost(data = {}) {
     const container = document.getElementById('nonConformContainer');
+    if (!container) return;
     const card = document.createElement('div');
     card.className = 'non-conform-card';
 
@@ -487,12 +546,14 @@ function saveNonConformPosts() {
 
 function addContactRow(data = {}) {
     const tbody = document.getElementById('contactsTableBody');
+    if (!tbody) return;
     const tr = document.createElement('tr');
     const disabledAttr = (typeof isGlobalLocked !== 'undefined' && isGlobalLocked) ? 'disabled' : '';
+    const phoneVal = typeof formatPhoneNumber === 'function' ? formatPhoneNumber(data.phone || '') : (data.phone || '');
     tr.innerHTML = `
         <td style="text-align: center;"><input type="text" class="contact-name" value="${data.name || ''}" placeholder="이름" style="width: 50px; min-width: 30px; text-align: center;" ${disabledAttr}></td>
         <td style="text-align: center;"><input type="text" class="contact-role" value="${data.role || ''}" placeholder="직책" style="width: 50px; min-width: 30px; text-align: center;" ${disabledAttr}></td>
-        <td style="text-align: center;"><input type="text" class="contact-phone" value="${typeof formatPhoneNumber === 'function' ? formatPhoneNumber(data.phone || '') : (data.phone || '')}" placeholder="연락처" style="width: 100px; min-width: 100px; text-align: center;" onchange="this.value = typeof formatPhoneNumber === 'function' ? formatPhoneNumber(this.value) : this.value" ${disabledAttr}></td>
+        <td style="text-align: center;"><input type="text" class="contact-phone" value="${phoneVal}" placeholder="연락처" style="width: 100px; min-width: 100px; text-align: center;" onchange="this.value = typeof formatPhoneNumber === 'function' ? formatPhoneNumber(this.value) : this.value" ${disabledAttr}></td>
         <td style="text-align: center;"><button class="btn-call" onclick="callContact(this)" style="background-color: #10b981; color: white; padding: 5px 8px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer;">통화</button></td>
         <td><input type="text" class="contact-memo" value="${data.memo || ''}" placeholder="메모" style="width: 100%; min-width: 200px;" ${disabledAttr}></td>
         <td style="text-align: center;"><button class="btn-copy" onclick="copyContactInfo(this)">복사</button></td>
@@ -568,7 +629,7 @@ function confirmDelete() {
 function uploadFile(input) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
-        const fileList = JSON.parse(localStorage.getItem('quality_docs_data') || JSON.stringify(initialDocsData));
+        const fileList = JSON.parse(localStorage.getItem('quality_docs_data') || (typeof initialDocsData !== 'undefined' ? JSON.stringify(initialDocsData) : '[]'));
         fileList.unshift({ name: file.name, size: (file.size / (1024 * 1024)).toFixed(2), date: new Date().toISOString().substring(0, 10) });
         localStorage.setItem('quality_docs_data', JSON.stringify(fileList));
         renderDocs(fileList);
@@ -578,6 +639,7 @@ function uploadFile(input) {
 
 function renderDocs(fileList) {
     const docList = document.getElementById('docList');
+    if (!docList) return;
     docList.innerHTML = '';
     fileList.forEach(item => {
         const li = document.createElement('li');
