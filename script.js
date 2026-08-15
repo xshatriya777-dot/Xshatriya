@@ -71,6 +71,50 @@ async function syncAllToDrive() {
         else alert("동기화 중 오류가 발생했습니다.");
     } catch (e) { alert("동기화 실패: " + e.message); }
 }
+async function importAllFromDrive() {
+    if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
+    const FOLDER_ID = '1UwPqBfs2QqLtS1jS-jw2_jeiij51FGfH';
+    
+    try {
+        // 1. 드라이브 폴더 안에서 'quality_portal_backup.json' 파일을 찾기
+        const query = `'${FOLDER_ID}' in parents and name = 'quality_portal_backup.json' and trashed = false`;
+        const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`, {
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        const searchData = await searchRes.json();
+
+        if (!searchData.files || searchData.files.length === 0) {
+            return alert("드라이브에 저장된 백업 파일이 없습니다. 먼저 '내보내기'를 진행해 주세요.");
+        }
+
+        const fileId = searchData.files[0].id;
+
+        // 2. 찾은 파일의 내용 다운로드하기
+        const downloadRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        
+        if (!downloadRes.ok) throw new Error("파일 다운로드 실패");
+        
+        const data = await downloadRes.json();
+
+        // 3. 로컬 스토리지(localStorage)에 데이터 덮어쓰기
+        if (data.schedule) localStorage.setItem('quality_schedule_data', data.schedule);
+        if (data.contacts) localStorage.setItem('quality_contacts_data_v6', data.contacts);
+        if (data.board) localStorage.setItem('quality_board_data', data.board);
+        if (data.nonconformity) localStorage.setItem('quality_nonconformity_data', data.nonconformity);
+        if (data.autocad) localStorage.setItem('quality_autocad_data', data.autocad);
+        if (data.docs) localStorage.setItem('quality_docs_data', data.docs);
+        if (data.memo) localStorage.setItem('quality_memo_data', data.memo);
+        if (data.visited_pages) localStorage.setItem('quality_visited_pages', data.visited_pages);
+        if (data.contacts_lock) localStorage.setItem('quality_contacts_lock', data.contacts_lock);
+
+        alert("드라이브에서 최신 데이터를 성공적으로 불러왔습니다!");
+        location.reload(); // 새로고침해서 화면에 최신 데이터 반영
+    } catch (e) {
+        alert("불러오기 실패: " + e.message);
+    }
+}
 
 const CONFIG = {
     categoryOptions: ['입고검사', '핏업검사', '용접검사', '공장검사', '자재승인', '시공검측', '완공검사'],
