@@ -23,13 +23,16 @@
         구글 계정으로 로그인
     </button>
 
-<div style="display: flex; gap: 10px; width: 100%;">
-    <!-- 불러오기 (Import) 버튼 -->
-    <button id="landingImportBtn" class="landing-btn" onclick="importAllFromDrive()" style="background-color: #0284c7; flex: 1; display: none;">📥 불러오기</button>
-    <!-- 내보내기 (Export) 버튼 -->
-    <button id="landingSyncBtn" class="landing-btn" onclick="syncAllToDrive()" style="background-color: #1d4ed8; flex: 1; display: none;">📤 내보내기</button>
-</div>    
-    <button id="landingEnterBtn" onclick="enterPortal()" class="landing-btn btn-enter-portal">🚀 홈으로 입장하기</button>
+<div style="display: flex; gap: 10px; width: 100%; margin-bottom: 12px;">
+    <!-- 불러오기 (IMPORT) 버튼 -->
+    <button id="landingImportBtn" class="landing-btn" onclick="importAllFromDrive()" style="background-color: #10b981; color: white; flex: 1; display: none; margin-bottom: 0;">IMPORT</button>
+    
+    <!-- 내보내기 (EXPORT) 버튼 -->
+    <button id="landingSyncBtn" class="landing-btn" onclick="syncAllToDrive()" style="background-color: #10b981; color: white; flex: 1; display: none; margin-bottom: 0;">EXPORT</button>
+</div>
+
+<!-- 홈 입장 (HOME) 버튼 -->
+<button id="landingEnterBtn" onclick="enterPortal()" class="landing-btn btn-enter-portal" style="background-color: #10b981; color: white; display: none;">HOME</button>
 </div>
 
 <!-- [2] 실제 포털 본문 -->
