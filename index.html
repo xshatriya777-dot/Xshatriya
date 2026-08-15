@@ -16,14 +16,23 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
+        /* 모바일에서는 기본 body 배경을 포털 본문 색상과 통일하여 여백 제거 */
         body {
-            background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+            background-color: #f8fafc;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 0; /* 모바일 여백 제거 */
+        }
+
+        /* 데스크탑에서만 랜딩 화면 주변에 녹색 그라데이션 여백이 보이도록 설정 */
+        @media (min-width: 769px) {
+            body {
+                background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+                padding: 20px;
+            }
         }
 
         #landingScreen {
@@ -39,11 +48,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
-            animation: fadeIn 0.4s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .landing-title-name {
@@ -113,7 +117,7 @@
         }
         .btn-enter-portal:hover { background-color: #1d4ed8; transform: translateY(-1px); }
 
-        /* 모바일 화면 최적화 (녹색 배경 삐져나옴 방지) */
+        /* 포털 본문 스타일 (모바일 화면 100% 꽉 채우기) */
         #portalContent {
             display: none;
             width: 100%;
@@ -135,18 +139,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 15px;
             z-index: 1000;
         }
 
         .header-left-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .header-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: bold;
             white-space: nowrap;
         }
@@ -257,7 +261,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 20px;
+            padding: 0 15px;
             font-size: 12px;
             font-weight: 600;
             z-index: 1000;
@@ -270,13 +274,13 @@
             background: #ffffff;
             border-radius: 0;
             box-shadow: none;
-            padding: 15px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             min-height: 85vh;
         }
 
-        /* 데스크탑 화면에서는 예쁜 박스 형태로 확장 */
+        /* 데스크탑 화면에서는 기존처럼 여백과 박스 형태로 표시 */
         @media (min-width: 769px) {
             #portalContent {
                 max-width: 1200px;
@@ -290,7 +294,7 @@
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
                 padding: 30px;
             }
-            .global-header, .global-footer {
+            .global-header {
                 padding: 0 30px;
             }
             .header-title {
@@ -400,9 +404,15 @@
 
         .quick-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
             margin-bottom: 25px;
+        }
+
+        @media (min-width: 769px) {
+            .quick-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+            .hero-banner { padding: 40px; }
+            .hero-banner h2 { font-size: 28px; }
         }
 
         .quick-card {
@@ -448,9 +458,6 @@
 
         @media (min-width: 769px) {
             .dashboard-section { grid-template-columns: 1fr 1fr; gap: 20px; }
-            .quick-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
-            .hero-banner { padding: 40px; }
-            .hero-banner h2 { font-size: 28px; }
         }
 
         .dashboard-card {
