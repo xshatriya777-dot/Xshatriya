@@ -27,6 +27,11 @@ function enterPortal() {
     setTimeout(refreshAllWidths, 50);
 }
 
+function goToLandingScreen() {
+    document.getElementById('portalContent').style.display = 'none';
+    document.getElementById('landingScreen').style.display = 'flex';
+}
+
 function logoutToLanding() {
     accessToken = null;
     document.getElementById('portalContent').style.display = 'none';
