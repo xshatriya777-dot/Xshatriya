@@ -2,14 +2,20 @@ const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleuser
 const SCOPES = 'https://www.googleapis.com/auth/drive';
 let accessToken = localStorage.getItem('quality_access_token') || null;
 
-// [랜딩 UI 업데이트 함수 - 모든 곳에서 호출하여 상태 유지]
+// [랜딩 UI 업데이트] 로그인 상태에 따라 버튼 표시 제어
 function updateLandingUI() {
     const isLogin = !!accessToken;
-    document.getElementById('landingGoogleBtn').style.display = isLogin ? 'none' : 'flex';
-    document.getElementById('loginStatusMsg').style.display = isLogin ? 'block' : 'none';
-    document.getElementById('landingImportBtn').style.display = isLogin ? 'flex' : 'none';
-    document.getElementById('landingSyncBtn').style.display = isLogin ? 'flex' : 'none';
-    document.getElementById('landingEnterBtn').style.display = isLogin ? 'flex' : 'none';
+    const gBtn = document.getElementById('landingGoogleBtn');
+    const statusMsg = document.getElementById('loginStatusMsg');
+    const importBtn = document.getElementById('landingImportBtn');
+    const syncBtn = document.getElementById('landingSyncBtn');
+    const enterBtn = document.getElementById('landingEnterBtn');
+
+    if (gBtn) gBtn.style.display = isLogin ? 'none' : 'flex';
+    if (statusMsg) statusMsg.style.display = isLogin ? 'block' : 'none';
+    if (importBtn) importBtn.style.display = isLogin ? 'flex' : 'none';
+    if (syncBtn) syncBtn.style.display = isLogin ? 'flex' : 'none';
+    if (enterBtn) enterBtn.style.display = isLogin ? 'flex' : 'none';
 }
 
 function triggerGoogleLogin() {
@@ -20,8 +26,10 @@ function triggerGoogleLogin() {
             if (tokenResponse && tokenResponse.access_token) {
                 accessToken = tokenResponse.access_token;
                 localStorage.setItem('quality_access_token', accessToken);
-                updateLandingUI();
+                
                 alert("구글 드라이브와 연동되었습니다!");
+                // 로그인 성공 후 즉시 포털로 진입
+                enterPortal();
             }
         },
     });
@@ -32,13 +40,14 @@ function enterPortal() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     document.getElementById('landingScreen').style.display = 'none';
     document.getElementById('portalContent').style.display = 'block';
+    updateLandingUI();
     setTimeout(refreshAllWidths, 50);
 }
 
 function goToLandingScreen() {
     document.getElementById('portalContent').style.display = 'none';
     document.getElementById('landingScreen').style.display = 'flex';
-    updateLandingUI(); // 랜딩 복귀 시 상태 재확인
+    updateLandingUI(); // 랜딩 복귀 시 버튼 상태 강제 업데이트
 }
 
 function logoutToLanding() {
@@ -50,7 +59,7 @@ function logoutToLanding() {
     location.reload();
 }
 
-// 📤 드라이브 내보내기 (Export)
+// [동기화 로직]
 async function syncAllToDrive() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     const data = {
@@ -65,7 +74,6 @@ async function syncAllToDrive() {
         contacts_lock: localStorage.getItem('quality_contacts_lock')
     };
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const FOLDER_ID = '1UwPqBfs2QqLtS1jS-jw2_jeiij51FGfH'; 
     const fileName = 'quality_portal_backup.json';
 
     try {
@@ -81,8 +89,6 @@ async function syncAllToDrive() {
         if (searchData.files && searchData.files.length > 0) {
             method = 'PATCH';
             url = `https://www.googleapis.com/upload/drive/v3/files/${searchData.files[0].id}?uploadType=multipart`;
-        } else {
-            metadata.parents = [FOLDER_ID];
         }
 
         const form = new FormData();
@@ -95,7 +101,6 @@ async function syncAllToDrive() {
     } catch (e) { alert("동기화 실패: " + e.message); }
 }
 
-// 📥 드라이브 불러오기 (Import)
 async function importAllFromDrive() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     try {
@@ -118,193 +123,15 @@ async function importAllFromDrive() {
     } catch (e) { alert("불러오기 실패: " + e.message); }
 }
 
-// --- 기타 기능들은 그대로 유지 ---
-const CONFIG = {
-    categoryOptions: ['입고검사', '핏업검사', '용접검사', '공장검사', '자재승인', '시공검측', '완공검사'],
-    personOptions: ['김학선', '이장훈', '김다훈'],
-    statusOptions: ['대기', '진행중', '검토중', '승인중', '완료', '보류']
-};
-const initialScheduleData = [{ completed: false, date: '2026-08-12', category: '입고검사', person: '김학선', status: '진행중', content: 'DW-300A 입고 검사 진행', note: '긴급' }];
-const initialContactsData = [{ name: '강범석', role: '팀장', phone: '010-5435-4950', memo: '' }];
-const initialBoardData = [{ title: '중요: DW-300A 품질 승인 서류 보완 요청', content: '삼성 측 전달 용품 품질 검사 증명서 작성 시 트루컬러 표기 항목 다시 점검할 것.' }];
-const initialNonConformData = [{ title: '철골 용접 부위 미달 검토', alpha1: 'A', num1: '47', alpha2: 'A', num2: '48', content: '현장 3층 B구역 용접 비드 두께 기준 미달로 인한 보완 조치 필요.', completed: false }];
-const initialAutocadData = [{ title: '오토캐드 고화질 PDF 다운로드 방법 (Ctrl+P)', content: '플롯터 세팅 시 AutoCAD PDF (High Quality Print).pc3 선택 후 백터 품질 2400 DPI 상향 설정.' }];
-const initialDocsData = [{ name: '품질관리_시방서_최신판.pdf', size: '2.4', date: '2026-08-10' }];
-
-const TAB_NAMES = {'schedule': '📅 스케줄', 'board': '📌 게시판', 'nonconformity': '⚠️ 부적합', 'contacts': '📞 연락처', 'specifications': '📁 파일관리', 'autocad': '💡 TIP', 'memo': '📝 메모장', 'calculator': '🧮 계산기'};
-const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
-let targetElementToDelete = null;
-let scheduleSortAsc = true;
-let contactSortAsc = true;
-let isGlobalLocked = false;
-let idleTimer = null;
-const IDLE_TIMEOUT = 1800000;
-const PASSWORD_CORRECT = "000000";
-
-function toggleMenu() {
-    document.getElementById('navMenu').classList.toggle('show');
-}
-
-function updateColumnWidths(tableId, isContact = false) {
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    table.querySelectorAll('input[type="text"]').forEach(input => {
-        if (isContact && input.classList.contains('contact-memo')) {
-            input.style.width = '100%';
-            input.style.minWidth = '250px';
-        } else if (!isContact) {
-            input.style.width = '100%';
-        }
-    });
-}
-
-function refreshAllWidths() {
-    updateColumnWidths('scheduleTable', false);
-    updateColumnWidths('contactsTable', true);
-}
-
-window.addEventListener('resize', refreshAllWidths);
-
-function resetIdleTimer() {
-    if (document.getElementById('lockModal').classList.contains('show')) return;
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(lockScreen, IDLE_TIMEOUT);
-}
-
-function lockScreen() {
-    document.getElementById('lockPasswordInput').value = '';
-    document.getElementById('lockErrorMsg').style.display = 'none';
-    document.getElementById('lockModal').classList.add('show');
-    document.getElementById('lockPasswordInput').focus();
-}
-
-function unlockScreen() {
-    if (document.getElementById('lockPasswordInput').value === PASSWORD_CORRECT) {
-        document.getElementById('lockModal').classList.remove('show');
-        resetIdleTimer();
-    } else {
-        document.getElementById('lockErrorMsg').style.display = 'block';
-        document.getElementById('lockPasswordInput').value = '';
-        document.getElementById('lockPasswordInput').focus();
-    }
-}
-
-['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
-    window.addEventListener(evt, resetIdleTimer);
-});
-
-function formatPhoneNumber(value) {
-    if (!value) return value;
-    const cleaned = ('' + value).replace(/\D/g, '');
-    if (cleaned.length === 11) return cleaned.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    if (cleaned.length === 10) {
-        if (cleaned.startsWith('02')) return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
-        return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-    }
-    if (cleaned.length === 9 && cleaned.startsWith('02')) return cleaned.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
-    return value;
-}
-
-function switchTab(tabId, btn) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + tabId).classList.add('active');
-    btn.classList.add('active');
-    document.getElementById('navMenu').classList.remove('show');
-
-    if (tabId !== 'home') recordVisitedPage(tabId);
-    else {
-        updateDashboardUpcomingSummary();
-        renderRecentVisitedPages();
-    }
-    setTimeout(refreshAllWidths, 50);
-}
-
-function navigateToTab(tabId) {
-    const btnMap = {
-        'schedule': 'btn-schedule', 'board': 'btn-board', 'nonconformity': 'btn-nonconformity',
-        'contacts': 'btn-contacts', 'specifications': 'btn-specifications', 'autocad': 'btn-autocad',
-        'memo': 'btn-memo', 'calculator': 'btn-calculator'
-    };
-    const targetBtn = document.querySelector('.' + btnMap[tabId]);
-    if (targetBtn) switchTab(tabId, targetBtn);
-}
-
-function recordVisitedPage(tabId) {
-    let history = JSON.parse(localStorage.getItem('quality_visited_pages') || '[]');
-    const now = new Date();
-    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    history = history.filter(item => item.tabId !== tabId);
-    history.unshift({ tabId, name: TAB_NAMES[tabId], time: timeStr });
-    if (history.length > 5) history = history.slice(0, 5);
-    localStorage.setItem('quality_visited_pages', JSON.stringify(history));
-}
-
-function renderRecentVisitedPages() {
-    const container = document.getElementById('homeRecentPagesSummary');
-    const history = JSON.parse(localStorage.getItem('quality_visited_pages') || '[]');
-    container.innerHTML = '';
-    if (history.length === 0) {
-        container.innerHTML = '<li class="stat-item" style="color:#94a3b8;">최근 열람한 페이지가 없다.</li>';
-        return;
-    }
-    history.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'stat-item';
-        li.innerHTML = `<span class="stat-item-link" onclick="navigateToTab('${item.tabId}')">${item.name}</span><span style="font-size:11px; color:#64748b;">${item.time} 열람</span>`;
-        container.appendChild(li);
-    });
-}
-
-function updateDashboardUpcomingSummary() {
-    const rows = document.querySelectorAll('#tableBody tr');
-    const scheduleList = [];
-    const todayDate = new Date(new Date().toISOString().substring(0, 10));
-    rows.forEach(row => {
-        if (!row.querySelector('input[type="checkbox"]').checked) {
-            const dateVal = row.querySelector('input[type="date"]').value;
-            const statusVal = row.querySelectorAll('select')[2].value;
-            const contentVal = row.querySelectorAll('input[type="text"]')[0].value || '내용 없음';
-            if (dateVal) {
-                const diffDays = Math.ceil((new Date(dateVal) - todayDate) / (1000 * 60 * 60 * 24));
-                scheduleList.push({ date: dateVal, content: contentVal, status: statusVal, diffDays });
-            }
-        }
-    });
-    scheduleList.sort((a, b) => (a.diffDays >= 0 && b.diffDays < 0 ? -1 : a.diffDays < 0 && b.diffDays >= 0 ? 1 : a.diffDays - b.diffDays));
-    const summaryContainer = document.getElementById('homeScheduleSummary');
-    summaryContainer.innerHTML = '';
-    if (scheduleList.length === 0) {
-        summaryContainer.innerHTML = '<li class="stat-item" style="color:#94a3b8;">임박한 미완료 스케줄이 없다.</li>';
-        return;
-    }
-    scheduleList.slice(0, 4).forEach(item => {
-        let dDayClass = 'd-day-upcoming', dDayText = `D-${item.diffDays}`;
-        if (item.diffDays === 0) { dDayText = 'D-DAY'; dDayClass = 'd-day-today'; }
-        else if (item.diffDays < 0) { dDayText = `D+${Math.abs(item.diffDays)}`; dDayClass = 'd-day-past'; }
-        const li = document.createElement('li');
-        li.className = 'stat-item';
-        li.innerHTML = `<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex: 1 1 auto; min-width: 180px;"><span class="d-day-badge ${dDayClass}" style="flex-shrink: 0;">${dDayText}</span><span style="font-weight:600; color:#1e293b; word-break: break-all;">${item.content}</span><span style="font-size:11px; color:#64748b; white-space: nowrap;">(${item.date})</span></div><div style="flex-shrink: 0;"><span style="font-weight: bold; font-size:12px;" class="status-select ${getStatusClass(item.status)}">${item.status}</span></div>`;
-        summaryContainer.appendChild(li);
-    });
-}
-
-function getStatusClass(val) {
-    if (val === '대기') return 'pending';
-    if (val === '진행중') return 'progress';
-    if (val === '검토중') return 'review';
-    if (val === '승인중') return 'approving';
-    if (val === '완료') return 'done';
-    if (val === '보류') return 'hold';
-    return '';
-}
-
+// [초기 로드]
 window.onload = function() {
-    if (!accessToken) {
-        document.getElementById('landingScreen').style.display = 'flex';
-        document.getElementById('portalContent').style.display = 'none';
-    } else {
+    updateLandingUI();
+    if (accessToken) {
+        // 토큰이 있으면 포털 화면 표시
+        document.getElementById('landingScreen').style.display = 'none';
+        document.getElementById('portalContent').style.display = 'block';
+    }
+    else {
         document.getElementById('landingScreen').style.display = 'none';
         document.getElementById('portalContent').style.display = 'block';
     }
