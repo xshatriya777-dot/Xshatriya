@@ -17,7 +17,6 @@
         }
 
         body {
-            /* 전체 배경색: 녹색 그라데이션 */
             background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
             color: #ffffff;
             min-height: 100vh;
@@ -27,7 +26,6 @@
             padding: 20px;
         }
 
-        /* 랜딩 페이지 (네이비 카드 및 양쪽 여백 적용) */
         #landingScreen {
             display: flex;
             flex-direction: column;
@@ -35,7 +33,6 @@
             justify-content: center;
             width: 100%;
             max-width: 440px;
-            /* 카드 배경: 네이비 */
             background: rgb(5, 8, 61);
             padding: 40px 30px;
             border-radius: 20px;
@@ -49,19 +46,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* 예명 타이틀 스타일 */
         .landing-title-name {
             font-size: 26px;
             font-weight: 800;
-            color: #38bdf8; /* 포인트 블루 컬러 */
+            color: #38bdf8;
             letter-spacing: 1px;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }
 
-        #landingScreen .landing-logo {
-            font-size: 38px;
-            margin-bottom: 8px;
-        }
         #landingScreen h1 {
             font-size: 20px;
             font-weight: 700;
@@ -69,7 +61,7 @@
             margin-bottom: 8px;
         }
         #landingScreen p {
-            font-size: 13px;
+            font-size: 14px;
             color: #94a3b8;
             margin-bottom: 24px;
             line-height: 1.5;
@@ -126,7 +118,6 @@
         }
         .btn-enter-portal:hover { background-color: #1d4ed8; transform: translateY(-1px); }
 
-        /* 포털 본문 컨테이너 */
         #portalContent {
             display: none;
             width: 100%;
@@ -772,12 +763,10 @@
 </head>
 <body>
 
-<!-- [1] 녹색 배경 & 네이비 카드 & Xshatriya 타이틀이 적용된 랜딩 페이지 -->
+<!-- [1] 랜딩 페이지 -->
 <div id="landingScreen">
     <div class="landing-title-name">Xshatriya</div>
-    <div class="landing-logo">🏢</div>
-    <h1>화성ENG(주) 품질관리 포털</h1>
-    <p>구글 드라이브와 데이터를 동기화하려면 먼저 로그인해주세요.</p>
+    <p>먼저 로그인하세요</p>
     
     <!-- 로그인 성공 시 표시되는 상태 메시지 -->
     <div id="loginStatusMsg" class="login-status-box">✔ 구글 계정 연동 완료</div>
@@ -795,7 +784,7 @@
     <button id="landingEnterBtn" onclick="enterPortal()" class="landing-btn btn-enter-portal">🚀 포털 홈으로 입장하기</button>
 </div>
 
-<!-- [2] 실제 포털 본문 (로그인 후 진입) -->
+<!-- [2] 실제 포털 본문 -->
 <div id="portalContent">
     <header class="global-header">
         <div class="header-left-group">
@@ -1076,6 +1065,7 @@
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
     let accessToken = null;
 
+    // 모바일 리디렉션 방식 로그인 적용
     function triggerGoogleLogin() {
         const tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID,
@@ -1093,7 +1083,7 @@
                 }
             },
         });
-        tokenClient.requestAccessToken();
+        tokenClient.requestAccessToken({ prompt: 'consent' });
     }
 
     function enterPortal() {
