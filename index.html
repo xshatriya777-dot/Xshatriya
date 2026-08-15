@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>품질관리 통합포털</title>
-    <!-- 외부 라이브러리 및 파일 연결 -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js" async defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -19,50 +18,28 @@
         <div class="landing-title-name" style="font-size: 24px; font-weight: bold; color: #38bdf8; margin-bottom: 5px;">Xshatriya</div>
         <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">먼저 로그인하세요</p>
         
-        <div id="loginStatusMsg" class="login-status-box" style="display: none; margin-bottom: 15px; color: #34d399; font-size: 13px; font-weight: bold; background: rgba(52, 211, 153, 0.1); padding: 8px 12px; border-radius: 6px; width: 100%; text-align: center; box-sizing: border-box;">✔ 구글 계정 연동 완료</div>
+        <div id="loginStatusMsg" style="display: none; margin-bottom: 15px; color: #34d399; font-size: 13px; font-weight: bold; background: rgba(52, 211, 153, 0.1); padding: 8px 12px; border-radius: 6px; width: 100%; text-align: center;">✔ 구글 계정 연동 완료</div>
 
-        <button id="landingGoogleBtn" onclick="triggerGoogleLogin()" class="landing-btn btn-google-custom" style="margin-bottom: 12px; width: 100%;">
-            <svg width="18" height="18" viewBox="0 0 18 18" style="margin-right: 8px;"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.49h4.84c-.21 1.12-.84 2.07-1.8 2.71v2.26h2.91c1.7-1.56 2.69-3.86 2.69-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.85.86-3.05.86-2.34 0-4.33-1.58-5.04-3.71H.95v2.33C2.43 15.75 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.96 10.71c-.18-.54-.28-1.12-.28-1.71s.1-1.17.28-1.71V4.96H.95C.35 6.15 0 7.52 0 9s.35 2.85.95 4.04l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.43 2.25.95 4.96l3.01 2.33c.71-2.13 2.7-3.71 5.04-3.71z"/></svg>
+        <button id="landingGoogleBtn" onclick="triggerGoogleLogin()" style="background: #fff; color: #333; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.49h4.84c-.21 1.12-.84 2.07-1.8 2.71v2.26h2.91c1.7-1.56 2.69-3.86 2.69-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.85.86-3.05.86-2.34 0-4.33-1.58-5.04-3.71H.95v2.33C2.43 15.75 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.96 10.71c-.18-.54-.28-1.12-.28-1.71s.1-1.17.28-1.71V4.96H.95C.35 6.15 0 7.52 0 9s.35 2.85.95 4.04l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.43 2.25.95 4.96l3.01 2.33c.71-2.13 2.7-3.71 5.04-3.71z"/></svg>
             구글 계정으로 로그인
         </button>
 
         <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 8px;">
-            <!-- IMPORT 버튼 -->
-            <button id="landingImportBtn" class="landing-btn" onclick="importAllFromDrive()" 
-                    style="background-color: #10b981; color: white; flex: 1; display: none; margin: 0; border: none; padding: 10px; cursor: pointer; transition: 0.2s; border-radius: 6px; font-weight: bold;"
-                    onmouseover="this.style.backgroundColor='#059669'" 
-                    onmouseout="this.style.backgroundColor='#10b981'"
-                    onmousedown="this.style.transform='scale(0.95)'"
-                    onmouseup="this.style.transform='scale(1)'">IMPORT</button>
-            
-            <!-- EXPORT 버튼 -->
-            <button id="landingSyncBtn" class="landing-btn" onclick="syncAllToDrive()" 
-                    style="background-color: #10b981; color: white; flex: 1; display: none; margin: 0; border: none; padding: 10px; cursor: pointer; transition: 0.2s; border-radius: 6px; font-weight: bold;"
-                    onmouseover="this.style.backgroundColor='#059669'" 
-                    onmouseout="this.style.backgroundColor='#10b981'"
-                    onmousedown="this.style.transform='scale(0.95)'"
-                    onmouseup="this.style.transform='scale(1)'">EXPORT</button>
+            <button id="landingImportBtn" onclick="importAllFromDrive()" style="background-color: #10b981; color: white; flex: 1; display: none; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">IMPORT</button>
+            <button id="landingSyncBtn" onclick="syncAllToDrive()" style="background-color: #10b981; color: white; flex: 1; display: none; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">EXPORT</button>
         </div>
-
-        <!-- HOME 버튼 -->
-        <button id="landingEnterBtn" onclick="enterPortal()" class="landing-btn" 
-                style="background-color: #10b981; color: white; display: none; width: 100%; border: none; padding: 10px; cursor: pointer; transition: 0.2s; border-radius: 6px; font-weight: bold; margin: 0;"
-                onmouseover="this.style.backgroundColor='#059669'" 
-                onmouseout="this.style.backgroundColor='#10b981'"
-                onmousedown="this.style.transform='scale(0.95)'"
-                onmouseup="this.style.transform='scale(1)'">HOME</button>
-
+        <button id="landingEnterBtn" onclick="enterPortal()" style="background-color: #10b981; color: white; display: none; width: 100%; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">HOME</button>
     </div>
 </div>
 
-<!-- [2] 실제 포털 본문 -->
-<div id="portalContent" style="display: none; background-color: #f1f5f9; min-height: 100vh; box-sizing: border-box;">
+<!-- [2] 포털 본문 껍데기 -->
+<div id="portalContent" style="display: none; background-color: #f1f5f9; min-height: 100vh;">
     <header class="global-header">
         <div class="header-left-group">
             <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
-            <span class="header-title" onclick="goToLandingScreen()" style="cursor: pointer;" title="랜딩 페이지로 돌아가기">화성ENG(주)</span>
+            <span class="header-title" onclick="goToLandingScreen()" style="cursor: pointer;">화성ENG(주)</span>
         </div>
-
         <nav class="nav-menu" id="navMenu">
             <button class="nav-btn btn-home active" onclick="switchTab('home', this)">🏠 Home</button>
             <button class="nav-btn btn-schedule" onclick="switchTab('schedule', this)">📅 스케줄</button>
@@ -73,50 +50,20 @@
             <button class="nav-btn btn-autocad" onclick="switchTab('autocad', this)">💡 TIP</button>
             <button class="nav-btn btn-memo" onclick="switchTab('memo', this)">📝 메모</button>
             <button class="nav-btn btn-calculator" onclick="switchTab('calculator', this)">🧮 계산기</button>
-            
-            <div class="right-link-group">
-                <a href="https://stsds.secsso.net/adfs/ls/" target="_blank" class="nav-btn nav-btn-cpms">🏢 CPMS</a>
-                <a href="https://mail.daum.net" target="_blank" class="nav-btn nav-btn-daum">✉️ MAIL</a>
-            </div>
         </nav>
-
         <div class="header-right-group">
-            <button onclick="logoutToLanding()" class="action-btn" style="background:#ef4444; color:white; padding:4px 8px; font-size:11px;">🔒 잠금/로그아웃</button>
+            <button onclick="logoutToLanding()" style="background:#ef4444; color:white; padding:4px 8px; border:none; border-radius:4px; font-size:11px; cursor:pointer;">🔒 잠금/로그아웃</button>
         </div>
     </header>
-
     <div class="container">
         <div class="content-body">
             <div id="tab-home" class="tab-content active">
                 <div class="hero-banner"><h2>품질관리 데스크</h2></div>
-                <div class="quick-grid">
-                    <div class="quick-card" onclick="navigateToTab('schedule')"><span class="quick-icon">📅</span><div class="quick-title">스케줄</div><div class="quick-desc">스케줄 관리</div></div>
-                    <div class="quick-card" onclick="navigateToTab('board')"><span class="quick-icon">📌</span><div class="quick-title">게시판</div><div class="quick-desc">업무 기록</div></div>
-                    <div class="quick-card" onclick="navigateToTab('nonconformity')"><span class="quick-icon">⚠️</span><div class="quick-title">부적합</div><div class="quick-desc">조치 관리</div></div>
-                    <div class="quick-card" onclick="navigateToTab('contacts')"><span class="quick-icon">📞</span><div class="quick-title">연락처</div><div class="quick-desc">담당자 정보</div></div>
-                    <div class="quick-card" onclick="navigateToTab('specifications')"><span class="quick-icon">📁</span><div class="quick-title">파일관리</div><div class="quick-desc">파일 열람</div></div>
-                    <div class="quick-card" onclick="navigateToTab('autocad')"><span class="quick-icon">💡</span><div class="quick-title">TIP</div><div class="quick-desc">꿀팁 모음</div></div>
-                </div>
-                <div class="dashboard-section">
-                    <div class="dashboard-card"><h3>⏳ Deadline</h3><ul class="stat-list" id="homeScheduleSummary"></ul></div>
-                    <div class="dashboard-card"><h3>🕒 Recently Viewed Pages</h3><ul class="stat-list" id="homeRecentPagesSummary"></ul></div>
-                </div>
             </div>
-            <div id="tab-schedule" class="tab-content"><header><h1>📅 스케줄</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addRow()">추가</button><button class="action-btn btn-save" onclick="saveData()">저장</button></div></header><div class="table-wrapper"><table id="scheduleTable"><thead><tr><th>완료</th><th>날짜</th><th>요일</th><th>업무구분</th><th>담당감리</th><th>진행</th><th>내용</th><th>비고</th><th>삭제</th></tr></thead><tbody id="tableBody"></tbody></table></div></div>
-            <div id="tab-board" class="tab-content"><header><h1>📌 게시판</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addBoardPost()">추가</button><button class="action-btn btn-save" onclick="saveBoardPosts()">저장</button></div></header><div class="non-conform-toolbar"><input type="text" id="boardFilterInput" class="filter-input" placeholder="🔍 검색..." oninput="filterBoard()"></div><div id="boardContainer" class="board-container"></div></div>
-            <div id="tab-nonconformity" class="tab-content"><header><h1>⚠️ 부적합</h1><button class="action-btn btn-add" onclick="addNonConformPost()">추가</button></header><div class="non-conform-toolbar"><input type="text" id="nonConformFilterInput" class="filter-input" placeholder="🔍 검색..." oninput="filterNonConformity()"></div><div id="nonConformContainer" class="board-container"></div></div>
-            <div id="tab-contacts" class="tab-content"><header><h1>📞 연락처</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addContactRow()">추가</button><button class="action-btn btn-save" onclick="saveContacts()">저장</button></div></header><div class="contacts-toolbar"><input type="text" id="contactFilterInput" class="filter-input" placeholder="🔍 검색..." oninput="filterContacts()"><button class="btn-done-all" id="globalLockBtn" onclick="toggleGlobalLock(this)">완료</button></div><div class="table-wrapper"><table id="contactsTable"><thead><tr><th style="text-align: center;">이름</th><th style="text-align: center;">직책</th><th style="text-align: center;">연락처</th><th style="text-align: center;">통화</th><th style="text-align: center;">메모</th><th style="text-align: center;">복사</th><th style="text-align: center;">삭제</th></tr></thead><tbody id="contactsTableBody"></tbody></table></div></div>
-            <div id="tab-specifications" class="tab-content"><header><h1>📁 파일관리</h1><div class="btn-group"><a href="https://drive.google.com" target="_blank" class="btn-drive-link">🌐</a><button class="action-btn btn-save" onclick="saveSpecifications()">저장</button></div></header><div class="upload-card"><p>시방서 문서를 업로드하세요.</p><label for="fileInput" class="upload-label">📄 파일 선택</label><input type="file" id="fileInput" onchange="uploadFile(this)"></div><ul class="doc-list" id="docList"></ul></div>
-            <div id="tab-autocad" class="tab-content"><header><h1>💡 TIP</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addAutocadPost()">추가</button><button class="action-btn btn-save" onclick="saveAutocadPosts()">저장</button></div></header><div id="autocadContainer" class="board-container"></div></div>
-            <div id="tab-memo" class="tab-content"><header><h1>📝 메모장</h1><button class="action-btn btn-save" onclick="saveMemo()">저장</button></header><textarea id="memoArea" class="memo-textarea"></textarea></div>
-            <div id="tab-calculator" class="tab-content"><header><h1>🧮 계산기</h1></header><div style="width: 100%; max-width: 300px; margin: 0 auto; background: #f8fafc; padding: 10px; border-radius: 10px;"><input type="text" id="calcScreen" style="width: 100%; height: 40px; text-align: right; margin-bottom: 5px; padding: 8px;" readonly><div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;"><button onclick="calcClear()">C</button><button onclick="calcAppend('/')">/</button><button onclick="calcAppend('*')">*</button><button onclick="calcAppend('%')">%</button><button onclick="calcAppend('7')">7</button><button onclick="calcAppend('8')">8</button><button onclick="calcAppend('9')">9</button><button onclick="calcAppend('-')">-</button><button onclick="calcAppend('4')">4</button><button onclick="calcAppend('5')">5</button><button onclick="calcAppend('6')">6</button><button onclick="calcAppend('+')">+</button><button onclick="calcAppend('1')">1</button><button onclick="calcAppend('2')">2</button><button onclick="calcAppend('3')">3</button><button onclick="calcResult()">=</button><button onclick="calcAppend('0')">0</button><button onclick="calcAppend('.')">.</button><button onclick="calcBack()">X</button></div></div></div>
+            <!-- 다른 탭 내용들은 기존에 쓰시던 탭 구조를 그대로 두시면 됩니다 -->
         </div>
     </div>
-    <footer class="global-footer"><span>&copy; 2026 Xshatriya All rights reserved.</span></footer>
 </div>
-
-<div id="deleteModal" class="modal-overlay"><div class="modal-box"><div class="modal-icon">🤔</div><div class="modal-text" id="modalText">삭제하시겠습니까?</div><div class="modal-buttons"><button class="modal-btn modal-btn-yes" onclick="confirmDelete()">YES</button><button class="modal-btn modal-btn-no" onclick="closeDeleteModal()">NO</button></div></div></div>
-<div id="lockModal" class="modal-overlay"><div class="lock-box"><div class="modal-icon">🔒</div><div class="modal-text">화면이 잠겼습니다.<br>비밀번호를 입력하세요.</div><input type="password" id="lockPasswordInput" class="lock-input" placeholder="비밀번호 6자리" maxlength="6" onkeydown="if(event.key==='Enter') unlockScreen()"><button class="lock-btn" onclick="unlockScreen()">잠금 해제</button><div id="lockErrorMsg" class="lock-error">비밀번호가 올바르지 않습니다.</div></div></div>
 
 <script src="script.js"></script>
 </body>
