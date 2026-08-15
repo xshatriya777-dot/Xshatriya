@@ -28,7 +28,6 @@ function triggerGoogleLogin() {
                 localStorage.setItem('quality_access_token', accessToken);
                 
                 alert("구글 드라이브와 연동되었습니다!");
-                // 로그인 성공 후 즉시 포털로 진입
                 enterPortal();
             }
         },
@@ -41,13 +40,13 @@ function enterPortal() {
     document.getElementById('landingScreen').style.display = 'none';
     document.getElementById('portalContent').style.display = 'block';
     updateLandingUI();
-    setTimeout(refreshAllWidths, 50);
+    if(typeof refreshAllWidths === 'function') setTimeout(refreshAllWidths, 50);
 }
 
 function goToLandingScreen() {
     document.getElementById('portalContent').style.display = 'none';
     document.getElementById('landingScreen').style.display = 'flex';
-    updateLandingUI(); // 랜딩 복귀 시 버튼 상태 강제 업데이트
+    updateLandingUI(); 
 }
 
 function logoutToLanding() {
@@ -123,17 +122,18 @@ async function importAllFromDrive() {
     } catch (e) { alert("불러오기 실패: " + e.message); }
 }
 
-// [초기 로드]
+// [초기 로드] - 💡 올바른 화면 분기 처리
 window.onload = function() {
     updateLandingUI();
+    
     if (accessToken) {
-        // 토큰이 있으면 포털 화면 표시
+        // 로그인이 되어 있으면 포털 본문을 보여줌
         document.getElementById('landingScreen').style.display = 'none';
         document.getElementById('portalContent').style.display = 'block';
-    }
-    else {
-        document.getElementById('landingScreen').style.display = 'none';
-        document.getElementById('portalContent').style.display = 'block';
+    } else {
+        // 로그인이 안 되어 있으면 랜딩 화면을 보여줌
+        document.getElementById('landingScreen').style.display = 'flex';
+        document.getElementById('portalContent').style.display = 'none';
     }
 
     (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
@@ -150,10 +150,10 @@ window.onload = function() {
     renderDocs(JSON.parse(localStorage.getItem('quality_docs_data')) || initialDocsData);
     const savedMemo = localStorage.getItem('quality_memo_data');
     if (savedMemo) document.getElementById('memoArea').value = savedMemo;
-    resetIdleTimer();
-    updateDashboardUpcomingSummary();
-    renderRecentVisitedPages();
-    refreshAllWidths();
+    if (typeof resetIdleTimer === 'function') resetIdleTimer();
+    if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
+    if (typeof renderRecentVisitedPages === 'function') renderRecentVisitedPages();
+    if (typeof refreshAllWidths === 'function') refreshAllWidths();
 };
 
 function getDayOfWeek(dateString) {
@@ -187,17 +187,17 @@ function addRow(data = {}) {
     `;
     tbody.appendChild(tr);
     updateStyle(tr.querySelector('.status-select'));
-    refreshAllWidths();
+    if (typeof refreshAllWidths === 'function') refreshAllWidths();
 }
 
 function toggleComplete(checkbox) {
     checkbox.closest('tr').classList.toggle('completed', checkbox.checked);
-    updateDashboardUpcomingSummary();
+    if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
 }
 
 function updateDay(dateInput) {
     dateInput.closest('tr').querySelector('.day-cell').textContent = getDayOfWeek(dateInput.value);
-    updateDashboardUpcomingSummary();
+    if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
 }
 
 function updateStyle(selectElem) {
@@ -226,7 +226,7 @@ function saveData() {
         });
     });
     localStorage.setItem('quality_schedule_data', JSON.stringify(dataList));
-    updateDashboardUpcomingSummary();
+    if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
     alert('스케줄 데이터가 성공적으로 저장되었다.');
 }
 
@@ -477,11 +477,11 @@ function saveNonConformPosts() {
 function addContactRow(data = {}) {
     const tbody = document.getElementById('contactsTableBody');
     const tr = document.createElement('tr');
-    const disabledAttr = isGlobalLocked ? 'disabled' : '';
+    const disabledAttr = (typeof isGlobalLocked !== 'undefined' && isGlobalLocked) ? 'disabled' : '';
     tr.innerHTML = `
         <td style="text-align: center;"><input type="text" class="contact-name" value="${data.name || ''}" placeholder="이름" style="width: 50px; min-width: 30px; text-align: center;" ${disabledAttr}></td>
         <td style="text-align: center;"><input type="text" class="contact-role" value="${data.role || ''}" placeholder="직책" style="width: 50px; min-width: 30px; text-align: center;" ${disabledAttr}></td>
-        <td style="text-align: center;"><input type="text" class="contact-phone" value="${formatPhoneNumber(data.phone || '')}" placeholder="연락처" style="width: 100px; min-width: 100px; text-align: center;" onchange="this.value = formatPhoneNumber(this.value)" ${disabledAttr}></td>
+        <td style="text-align: center;"><input type="text" class="contact-phone" value="${typeof formatPhoneNumber === 'function' ? formatPhoneNumber(data.phone || '') : (data.phone || '')}" placeholder="연락처" style="width: 100px; min-width: 100px; text-align: center;" onchange="this.value = typeof formatPhoneNumber === 'function' ? formatPhoneNumber(this.value) : this.value" ${disabledAttr}></td>
         <td style="text-align: center;"><button class="btn-call" onclick="callContact(this)" style="background-color: #10b981; color: white; padding: 5px 8px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer;">통화</button></td>
         <td><input type="text" class="contact-memo" value="${data.memo || ''}" placeholder="메모" style="width: 100%; min-width: 200px;" ${disabledAttr}></td>
         <td style="text-align: center;"><button class="btn-copy" onclick="copyContactInfo(this)">복사</button></td>
@@ -511,17 +511,6 @@ function filterContacts() {
     });
 }
 
-function sortContacts() {
-    const tbody = document.getElementById('contactsTableBody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    rows.sort((a, b) => {
-        const vA = a.querySelector('.contact-name').value.trim(), vB = b.querySelector('.contact-name').value.trim();
-        return contactSortAsc ? vA.localeCompare(vB, 'ko') : vB.localeCompare(vA, 'ko');
-    });
-    contactSortAsc = !contactSortAsc;
-    rows.forEach(row => tbody.appendChild(row));
-}
-
 function copyContactInfo(btn) {
     const tr = btn.closest('tr');
     const text = `${tr.querySelector('.contact-name').value.trim()} ${tr.querySelector('.contact-phone').value.trim()}`.trim();
@@ -533,7 +522,7 @@ function saveContacts() {
     const list = [];
     document.querySelectorAll('#contactsTableBody tr').forEach(row => {
         const phoneInput = row.querySelector('.contact-phone');
-        const formatted = formatPhoneNumber(phoneInput.value);
+        const formatted = typeof formatPhoneNumber === 'function' ? formatPhoneNumber(phoneInput.value) : phoneInput.value;
         phoneInput.value = formatted;
         list.push({
             name: row.querySelector('.contact-name').value,
@@ -560,7 +549,7 @@ function closeDeleteModal() {
 function confirmDelete() {
     if (targetElementToDelete) {
         targetElementToDelete.remove();
-        updateDashboardUpcomingSummary();
+        if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
     }
     closeDeleteModal();
 }
