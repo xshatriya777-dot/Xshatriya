@@ -17,83 +17,126 @@
         }
 
         body {
-            background-color: #f8fafc;
-            color: #1e293b;
-            padding-top: 95px;
-            padding-bottom: 70px;
+            /* 전체 배경색: 녹색 그라데이션 */
+            background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+            color: #ffffff;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            align-items: center;
+            padding: 20px;
         }
 
-        /* 랜딩 페이지(로그인 관문) 스타일러스 */
+        /* 랜딩 페이지 (네이비 카드 및 양쪽 여백 적용) */
         #landingScreen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 420px;
-            margin: auto;
-            background: #ffffff;
+            max-width: 440px;
+            /* 카드 배경: 네이비 */
+            background: rgb(5, 8, 61);
             padding: 40px 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 예명 타이틀 스타일 */
+        .landing-title-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #38bdf8; /* 포인트 블루 컬러 */
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        #landingScreen .landing-logo {
+            font-size: 38px;
+            margin-bottom: 8px;
         }
         #landingScreen h1 {
-            font-size: 22px;
-            font-weight: 800;
-            color: #0f172a;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
             margin-bottom: 8px;
         }
         #landingScreen p {
-            font-size: 14px;
-            color: #64748b;
+            font-size: 13px;
+            color: #94a3b8;
             margin-bottom: 24px;
+            line-height: 1.5;
         }
         .login-status-box {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            color: #059669;
-            background: #ecfdf5;
+            color: #34d399;
+            background: rgba(5, 150, 105, 0.2);
             border: 1px solid #10b981;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             width: 100%;
             margin-bottom: 16px;
             display: none;
         }
         .landing-btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             border: none;
             transition: all 0.2s;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
+        .btn-google-custom {
+            background-color: #ffffff;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+            font-weight: 600;
+        }
+        .btn-google-custom:hover {
+            background-color: #f8f9fa;
+        }
+
         .btn-sync-action {
             background-color: #f59e0b;
             color: white;
             display: none;
         }
-        .btn-sync-action:hover { background-color: #d97706; }
+        .btn-sync-action:hover { background-color: #d97706; transform: translateY(-1px); }
         
         .btn-enter-portal {
             background-color: #2563eb;
             color: white;
             display: none;
         }
-        .btn-enter-portal:hover { background-color: #1d4ed8; }
+        .btn-enter-portal:hover { background-color: #1d4ed8; transform: translateY(-1px); }
 
-        /* 포털 본문 (기본은 숨김 처리, 랜딩 통과 시 표시) */
+        /* 포털 본문 컨테이너 */
         #portalContent {
             display: none;
             width: 100%;
             max-width: 1200px;
+            background: #f8fafc;
+            color: #1e293b;
+            border-radius: 12px;
+            padding-top: 95px;
+            padding-bottom: 70px;
+            min-height: 100vh;
         }
 
         .global-header {
@@ -132,7 +175,6 @@
             padding: 4px 8px;
         }
 
-        /* 햄버거 메뉴 드롭다운 스타일 */
         .nav-menu {
             display: none;
             flex-direction: column;
@@ -238,6 +280,8 @@
 
         .container {
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -728,28 +772,30 @@
 </head>
 <body>
 
-<!-- [1] 랜딩 페이지 (로그인 및 동기화 관문) -->
+<!-- [1] 녹색 배경 & 네이비 카드 & Xshatriya 타이틀이 적용된 랜딩 페이지 -->
 <div id="landingScreen">
+    <div class="landing-title-name">Xshatriya</div>
+    <div class="landing-logo">🏢</div>
     <h1>화성ENG(주) 품질관리 포털</h1>
-    <p>구글 계정으로 로그인 후 드라이브와 동기화하세요.</p>
+    <p>구글 드라이브와 데이터를 동기화하려면 먼저 로그인해주세요.</p>
     
-    <!-- 로그인 성공 시 표시되는 상태 텍스트 -->
-    <div id="loginStatusMsg" class="login-status-box">✔ 로그인됨</div>
+    <!-- 로그인 성공 시 표시되는 상태 메시지 -->
+    <div id="loginStatusMsg" class="login-status-box">✔ 구글 계정 연동 완료</div>
 
-    <!-- 구글 로그인 버튼 영역 -->
-    <div id="landingGoogleBtnContainer" style="margin-bottom: 15px; display: flex; justify-content: center;">
-        <div id="g_id_onload" data-client_id="593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
-        <div class="g_id_signin" data-type="standard" data-size="large"></div>
-    </div>
+    <!-- 구글 로그인 버튼 -->
+    <button id="landingGoogleBtn" onclick="triggerGoogleLogin()" class="landing-btn btn-google-custom">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.49h4.84c-.21 1.12-.84 2.07-1.8 2.71v2.26h2.91c1.7-1.56 2.69-3.86 2.69-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.85.86-3.05.86-2.34 0-4.33-1.58-5.04-3.71H.95v2.33C2.43 15.75 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.96 10.71c-.18-.54-.28-1.12-.28-1.71s.1-1.17.28-1.71V4.96H.95C.35 6.15 0 7.52 0 9s.35 2.85.95 4.04l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.43 2.25.95 4.96l3.01 2.33c.71-2.13 2.7-3.71 5.04-3.71z"/></svg>
+        구글 계정으로 로그인
+    </button>
 
-    <!-- 동기화 버튼 -->
+    <!-- 동기화 버튼 (로그인 후 표시) -->
     <button id="landingSyncBtn" onclick="syncAllToDrive()" class="landing-btn btn-sync-action">🔄 드라이브 데이터 동기화</button>
 
-    <!-- 홈으로 진입 버튼 -->
+    <!-- 홈으로 진입 버튼 (로그인 후 표시) -->
     <button id="landingEnterBtn" onclick="enterPortal()" class="landing-btn btn-enter-portal">🚀 포털 홈으로 입장하기</button>
 </div>
 
-<!-- [2] 실제 포털 본문 (로그인 후 입장 가능) -->
+<!-- [2] 실제 포털 본문 (로그인 후 진입) -->
 <div id="portalContent">
     <header class="global-header">
         <div class="header-left-group">
@@ -999,7 +1045,6 @@
         </div>
     </div>
 
-    <!-- 푸터 -->
     <footer class="global-footer">
         <span>&copy; 2026 Xshatriya All rights reserved.</span>
     </footer>
@@ -1027,26 +1072,25 @@
 </div>
 
 <script>
-    /* [Google Drive 연동 및 랜딩 페이지 제어 로직] */
     const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
     let accessToken = null;
 
-    function handleCredentialResponse(response) {
+    function triggerGoogleLogin() {
         const tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID,
             scope: SCOPES,
             callback: (tokenResponse) => {
-                accessToken = tokenResponse.access_token;
-                
-                // 로그인 성공 시 UI 변경
-                document.getElementById('googleSignInButton')?.remove();
-                document.getElementById('landingGoogleBtnContainer').style.display = 'none';
-                document.getElementById('loginStatusMsg').style.display = 'block';
-                document.getElementById('landingSyncBtn').style.display = 'block';
-                document.getElementById('landingEnterBtn').style.display = 'block';
+                if (tokenResponse && tokenResponse.access_token) {
+                    accessToken = tokenResponse.access_token;
+                    
+                    document.getElementById('landingGoogleBtn').style.display = 'none';
+                    document.getElementById('loginStatusMsg').style.display = 'block';
+                    document.getElementById('landingSyncBtn').style.display = 'flex';
+                    document.getElementById('landingEnterBtn').style.display = 'flex';
 
-                alert("구글 드라이브와 연결되었습니다!");
+                    alert("구글 드라이브와 연동되었습니다!");
+                }
             },
         });
         tokenClient.requestAccessToken();
@@ -1063,7 +1107,6 @@
         accessToken = null;
         document.getElementById('portalContent').style.display = 'none';
         document.getElementById('landingScreen').style.display = 'flex';
-        // 새로고침하여 초기화
         location.reload();
     }
 
@@ -1111,7 +1154,6 @@
         }
     }
 
-    /* [기존 포털 시스템 전체 로직] */
     const CONFIG = {
         categoryOptions: ['입고검사', '핏업검사', '용접검사', '공장검사', '자재승인', '시공검측', '완공검사'],
         personOptions: ['김학선', '이장훈', '김다훈'],
