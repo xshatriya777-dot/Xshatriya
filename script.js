@@ -626,7 +626,7 @@ function addContactRow(data = {}) {
         <td><input type="text" class="contact-name" value="${data.name || ''}" placeholder="이름" style="width: 90px; min-width: 90px;" ${disabledAttr}></td>
         <td><input type="text" class="contact-role" value="${data.role || ''}" placeholder="직책" style="width: 60px; min-width: 60px;" ${disabledAttr}></td>
         <td><input type="text" class="contact-phone" value="${formatPhoneNumber(data.phone || '')}" placeholder="연락처" style="width: 105px; min-width: 105px;" onchange="this.value = formatPhoneNumber(this.value)" ${disabledAttr}></td>
-        <td style="text-align: center;"><button class="btn-call" onclick="callContact(this)" style="background-color: #10b981; color: white; padding: 5px 8px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer;">전화</button></td>
+        <td style="text-align: center;"><button class="btn-call" onclick="callContact(this)" style="background-color: #10b981; color: white; padding: 5px 8px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer;">통화</button></td>
         <td><input type="text" class="contact-memo" value="${data.memo || ''}" placeholder="메모" style="width: 100%; min-width: 200px;" ${disabledAttr}></td>
         <td style="text-align: center;"><button class="btn-copy" onclick="copyContactInfo(this)">복사</button></td>
         <td style="text-align: center;"><button class="btn-delete" onclick="openDeleteModal(this, 'standard')">삭제</button></td>
