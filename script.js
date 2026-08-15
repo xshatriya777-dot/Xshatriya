@@ -1,6 +1,6 @@
 const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-let accessToken = null;
+let accessToken = localStorage.getItem('quality_access_token') || null;
 
 function triggerGoogleLogin() {
     const tokenClient = google.accounts.oauth2.initTokenClient({
@@ -9,6 +9,7 @@ function triggerGoogleLogin() {
         callback: (tokenResponse) => {
             if (tokenResponse && tokenResponse.access_token) {
                 accessToken = tokenResponse.access_token;
+                localStorage.setItem('quality_access_token', accessToken);
                 document.getElementById('landingGoogleBtn').style.display = 'none';
                 document.getElementById('loginStatusMsg').style.display = 'block';
                 document.getElementById('landingSyncBtn').style.display = 'flex';
@@ -34,6 +35,7 @@ function goToLandingScreen() {
 
 function logoutToLanding() {
     accessToken = null;
+    localStorage.removeItem('quality_access_token');
     document.getElementById('portalContent').style.display = 'none';
     document.getElementById('landingScreen').style.display = 'flex';
     location.reload();
@@ -285,6 +287,12 @@ function getStatusClass(val) {
 }
 
 window.onload = function() {
+    // 새로고침 시 로그인 토큰이 있으면 포털 화면을 바로 유지
+    if (accessToken) {
+        document.getElementById('landingScreen').style.display = 'none';
+        document.getElementById('portalContent').style.display = 'block';
+    }
+
     (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
     (JSON.parse(localStorage.getItem('quality_contacts_data_v6')) || initialContactsData).forEach(item => addContactRow(item));
     if (localStorage.getItem('quality_contacts_lock') === 'true') {
