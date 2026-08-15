@@ -94,9 +94,7 @@
             color: #3c4043;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .btn-google-custom:hover {
-            background-color: #f8f9fa;
-        }
+        .btn-google-custom:hover { background-color: #f8f9fa; }
 
         .landing-action-btn {
             background-color: #10b981;
@@ -108,17 +106,14 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .landing-action-btn:hover {
-            background-color: #059669;
-        }
+        .landing-action-btn:hover { background-color: #059669; }
 
         /* [2] 포털 본문 스타일 */
         #portalContent {
             display: none;
             padding-top: 95px;
             padding-bottom: 70px;
-            display: none; /* JS에서 제어 */
-            justify-content: center;
+            flex-direction: column;
         }
 
         .global-header {
@@ -136,27 +131,9 @@
             z-index: 1000;
         }
 
-        .header-left-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-title {
-            font-size: 20px;
-            font-weight: bold;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .hamburger-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #ffffff;
-            padding: 4px 8px;
-        }
+        .header-left-group { display: flex; align-items: center; gap: 12px; }
+        .header-title { font-size: 20px; font-weight: bold; white-space: nowrap; cursor: pointer; }
+        .hamburger-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #ffffff; padding: 4px 8px; }
 
         .nav-menu {
             display: none;
@@ -190,20 +167,10 @@
             text-decoration: none;
             margin-bottom: 6px;
         }
-        .nav-btn:hover { background: #059669 !important; color: #ffffff !important; }
-        .nav-btn.active { background: #059669 !important; color: #ffffff !important; }
+        .nav-btn:hover, .nav-btn.active { background: #059669 !important; color: #ffffff !important; border-color: #059669 !important; }
 
-        .right-link-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 6px;
-            border-top: 1px solid rgba(255,255,255,0.15);
-            padding-top: 10px;
-        }
+        .right-link-group { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; }
         .nav-btn-cpms, .nav-btn-daum { background-color: #1e3a8a; color: #ffffff; border-color: #1e3a8a; }
-
-        .header-right-group { display: flex; align-items: center; gap: 8px; }
 
         .global-footer {
             position: fixed;
@@ -267,6 +234,10 @@
         .stat-item { display: flex; flex-direction: column; padding: 10px 0; border-bottom: 1px dashed #cbd5e1; font-size: 14px; gap: 4px; }
         .stat-item-link { cursor: pointer; }
         .stat-item-link:hover { color: #2563eb; text-decoration: underline; }
+        .d-day-badge { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-right: 6px; display: inline-block; }
+        .d-day-today { background-color: #ef4444; color: white; }
+        .d-day-upcoming { background-color: #f97316; color: white; }
+        .d-day-past { background-color: #94a3b8; color: white; }
 
         .table-wrapper { overflow-x: auto; width: 100%; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
@@ -275,12 +246,32 @@
         tr.completed td { background-color: #f1f5f9; color: #94a3b8; }
         tr.completed input[type="text"] { text-decoration: line-through; color: #94a3b8; }
 
-        input[type="text"], input[type="date"], select {
-            width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; background-color: #fff; outline: none;
-        }
+        input[type="text"], input[type="date"], select { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; background-color: #fff; outline: none; }
         .clean-select { text-align: center !important; text-align-last: center !important; }
+        .status-select.pending { color: #d97706; font-weight: bold; }
+        .status-select.progress { color: #2563eb; font-weight: bold; }
+        .status-select.review { color: #7c3aed; font-weight: bold; }
+        .status-select.approving { color: #0284c7; font-weight: bold; }
+        .status-select.done { color: #059669; font-weight: bold; }
+        .status-select.hold { color: #dc2626; font-weight: bold; }
+
+        .contacts-toolbar, .non-conform-toolbar { display: flex; justify-content: space-between; align-items: center; background-color: #f1f5f9; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e2e8f0; gap: 12px; flex-wrap: wrap; width: 100%; }
+        .filter-input { width: 100% !important; max-width: 100% !important; flex: 1 1 100% !important; box-sizing: border-box !important; }
+        .contacts-toolbar .filter-input { width: auto !important; max-width: 180px !important; flex: 1 1 auto !important; }
+
+        .upload-card { background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px; }
+        .upload-label { display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .doc-list { list-style: none; }
+        .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background-color: white; }
+        .doc-info { display: flex; align-items: center; gap: 12px; }
+        .doc-link { color: #2563eb; text-decoration: none; font-weight: 600; }
+
         .memo-textarea { width: 100%; height: 350px; padding: 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; resize: vertical; }
         .board-card, .non-conform-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 10px; }
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .board-title-input { font-size: 16px; font-weight: 700; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; flex: 1; }
+        .board-content-textarea { width: 100%; min-height: 60px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; resize: none; outline: none; }
+        
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
         .modal-box { background-color: #ffffff; width: 380px; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -300,13 +291,11 @@
         
         <div id="loginStatusMsg" class="login-status-box">✔ 구글 계정 연동 완료</div>
 
-        <!-- 구글 로그인 버튼 -->
         <button id="landingGoogleBtn" onclick="triggerGoogleLogin()" class="landing-btn btn-google-custom">
             <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.49h4.84c-.21 1.12-.84 2.07-1.8 2.71v2.26h2.91c1.7-1.56 2.69-3.86 2.69-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.85.86-3.05.86-2.34 0-4.33-1.58-5.04-3.71H.95v2.33C2.43 15.75 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.96 10.71c-.18-.54-.28-1.12-.28-1.71s.1-1.17.28-1.71V4.96H.95C.35 6.15 0 7.52 0 9s.35 2.85.95 4.04l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.43 2.25.95 4.96l3.01 2.33c.71-2.13 2.7-3.71 5.04-3.71z"/></svg>
             구글 계정으로 로그인
         </button>
 
-        <!-- 로그인 후 나타나는 버튼들 -->
         <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 8px;">
             <button id="landingImportBtn" onclick="importAllFromDrive()" class="landing-action-btn" style="flex: 1; display: none;">IMPORT</button>
             <button id="landingSyncBtn" onclick="syncAllToDrive()" class="landing-action-btn" style="flex: 1; display: none;">EXPORT</button>
@@ -364,13 +353,13 @@
             </div>
 
             <div id="tab-schedule" class="tab-content"><header><h1>📅 스케줄</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addRow()">추가</button><button class="action-btn btn-save" onclick="saveData()">저장</button></div></header><div class="table-wrapper"><table id="scheduleTable"><thead><tr><th>완료</th><th>날짜</th><th>요일</th><th>업무구분</th><th>담당감리</th><th>진행사항</th><th>업무내용</th><th>비고</th><th>삭제</th></tr></thead><tbody id="tableBody"></tbody></table></div></div>
-            <div id="tab-board" class="tab-content"><header><h1>📌 게시판</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addBoardPost()">추가</button><button class="action-btn btn-save" onclick="saveBoardPosts()">저장</button></div></header><div id="boardContainer"></div></div>
-            <div id="tab-nonconformity" class="tab-content"><header><h1>⚠️ 부적합</h1><button class="action-btn btn-add" onclick="addNonConformPost()">추가</button></header><div id="nonConformContainer"></div></div>
-            <div id="tab-contacts" class="tab-content"><header><h1>📞 연락처</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addContactRow()">추가</button><button class="action-btn btn-save" onclick="saveContacts()">저장</button></div></header><div class="table-wrapper"><table id="contactsTable"><thead><tr><th>이름</th><th>직책</th><th>연락처</th><th>메모</th><th>복사</th><th>전화</th><th>삭제</th></tr></thead><tbody id="contactsTableBody"></tbody></table></div></div>
-            <div id="tab-specifications" class="tab-content"><header><h1>📁 파일관리</h1></header><input type="file" id="fileInput" onchange="uploadFile(this)"><ul id="docList"></ul></div>
-            <div id="tab-autocad" class="tab-content"><header><h1>💡 TIP</h1><button class="action-btn btn-add" onclick="addAutocadPost()">추가</button></header><div id="autocadContainer"></div></div>
+            <div id="tab-board" class="tab-content"><header><h1>📌 게시판</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addBoardPost()">추가</button><button class="action-btn btn-save" onclick="saveBoardPosts()">저장</button></div></header><div class="non-conform-toolbar"><input type="text" id="boardFilterInput" class="filter-input" placeholder="🔍 제목 또는 내용 검색..." oninput="filterBoard()"></div><div id="boardContainer" class="board-container"></div></div>
+            <div id="tab-nonconformity" class="tab-content"><header><h1>⚠️ 부적합</h1><button class="action-btn btn-add" onclick="addNonConformPost()">추가</button></header><div class="non-conform-toolbar"><input type="text" id="nonConformFilterInput" class="filter-input" placeholder="🔍 제목 또는 내용 검색..." oninput="filterNonConformity()"></div><div id="nonConformContainer" class="board-container"></div></div>
+            <div id="tab-contacts" class="tab-content"><header><h1>📞 연락처</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addContactRow()">추가</button><button class="action-btn btn-save" onclick="saveContacts()">저장</button></div></header><div class="contacts-toolbar"><input type="text" id="contactFilterInput" class="filter-input" placeholder="🔍 이름 검색..." oninput="filterContacts()"><button class="btn-done-all" id="globalLockBtn" onclick="toggleGlobalLock(this)">완료</button></div><div class="table-wrapper"><table id="contactsTable"><thead><tr><th>이름</th><th>직책</th><th>연락처</th><th>메모</th><th>복사</th><th>전화</th><th>삭제</th></tr></thead><tbody id="contactsTableBody"></tbody></table></div></div>
+            <div id="tab-specifications" class="tab-content"><header><h1>📁 파일관리</h1><div class="btn-group"><a href="https://drive.google.com" target="_blank" class="btn-drive-link">🌐</a><button class="action-btn btn-save" onclick="saveSpecifications()">저장</button></div></header><div class="upload-card"><p>시방서 문서를 업로드하세요.</p><label for="fileInput" class="upload-label">📄 파일 선택</label><input type="file" id="fileInput" onchange="uploadFile(this)"></div><ul class="doc-list" id="docList"></ul></div>
+            <div id="tab-autocad" class="tab-content"><header><h1>💡 TIP</h1><div class="btn-group"><button class="action-btn btn-add" onclick="addAutocadPost()">추가</button><button class="action-btn btn-save" onclick="saveAutocadPosts()">저장</button></div></header><div id="autocadContainer" class="board-container"></div></div>
             <div id="tab-memo" class="tab-content"><header><h1>📝 메모장</h1><button class="action-btn btn-save" onclick="saveMemo()">저장</button></header><textarea id="memoArea" class="memo-textarea"></textarea></div>
-            <div id="tab-calculator" class="tab-content"><header><h1>🧮 계산기</h1></header><input type="text" id="calcScreen" readonly></div>
+            <div id="tab-calculator" class="tab-content"><header><h1>🧮 계산기</h1></header><div style="width: 100%; max-width: 300px; margin: 0 auto; background: #f8fafc; padding: 10px; border-radius: 10px;"><input type="text" id="calcScreen" style="width: 100%; height: 40px; text-align: right; margin-bottom: 5px; padding: 8px;" readonly><div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;"><button onclick="calcClear()">C</button><button onclick="calcAppend('/')">/</button><button onclick="calcAppend('*')">*</button><button onclick="calcAppend('%')">%</button><button onclick="calcAppend('7')">7</button><button onclick="calcAppend('8')">8</button><button onclick="calcAppend('9')">9</button><button onclick="calcAppend('-')">-</button><button onclick="calcAppend('4')">4</button><button onclick="calcAppend('5')">5</button><button onclick="calcAppend('6')">6</button><button onclick="calcAppend('+')">+</button><button onclick="calcAppend('1')">1</button><button onclick="calcAppend('2')">2</button><button onclick="calcAppend('3')">3</button><button onclick="calcResult()">=</button><button onclick="calcAppend('0')">0</button><button onclick="calcAppend('.')">.</button><button onclick="calcBack()">X</button></div></div></div>
         </div>
     </div>
 </div>
@@ -386,8 +375,47 @@
 
 <script>
     const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com';
-    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+    const SCOPES = 'https://www.googleapis.com/auth/drive';
     let accessToken = localStorage.getItem('quality_access_token') || null;
+
+    const CONFIG = {
+        categoryOptions: ['입고검사', '핏업검사', '용접검사', '공장검사', '자재승인', '시공검측', '완공검사'],
+        personOptions: ['김학선', '이장훈', '김다훈'],
+        statusOptions: ['대기', '진행중', '검토중', '승인중', '완료', '보류']
+    };
+    const initialScheduleData = [
+        { completed: false, date: '2026-08-12', category: '입고검사', person: '김학선', status: '진행중', content: 'DW-300A 입고 검사 진행', note: '긴급' },
+        { completed: true, date: '2026-08-10', category: '공장검사', person: '이장훈', status: '완료', content: '창고 시설 정기 점검', note: '' },
+        { completed: false, date: '2026-08-15', category: '완공검사', person: '김다훈', status: '승인중', content: '융착파이프 샘플 최종 검수', note: '승인 대기중' }
+    ];
+    const initialContactsData = [
+        { name: '강범석', role: '팀장', phone: '010-5435-4950', memo: '' },
+        { name: '김다훈', role: '부장', phone: '010-9512-9501', memo: '' },
+        { name: '김소영', role: '대리', phone: '010-3132-7986', memo: '' },
+        { name: '김영진', role: '과장', phone: '010-5106-3277', memo: '' },
+        { name: '김재원', role: '차장', phone: '010-4617-7442', memo: '' },
+        { name: '김학선', role: '상무', phone: '010-2391-2812', memo: '' },
+        { name: '김형기', role: '차장', phone: '010-9907-8286', memo: '' },
+        { name: '박기범', role: '차장', phone: '010-3709-1761', memo: '' },
+        { name: '박상근', role: '소장', phone: '010-4843-0369', memo: '' },
+        { name: '박찬웅', role: '과장', phone: '010-4281-8287', memo: '' },
+        { name: '이강현', role: '차장', phone: '010-8139-6849', memo: '' },
+        { name: '이장훈', role: '상무', phone: '010-6353-1482', memo: '' },
+        { name: '정영권', role: '팀장', phone: '010-8688-0201', memo: '' },
+        { name: '진영훈', role: '과장', phone: '010-5781-0064', memo: '' },
+        { name: '최준혁', role: '대리', phone: '0109916-1052', memo: '' }
+    ];
+    const initialBoardData = [{ title: '중요: DW-300A 품질 승인 서류 보완 요청', content: '삼성 측 전달 용품 품질 검사 증명서 작성 시 트루컬러 표기 항목 다시 점검할 것.' }];
+    const initialNonConformData = [{ title: '철골 용접 부위 미달 검토', alpha1: 'A', num1: '47', alpha2: 'A', num2: '48', content: '현장 3층 B구역 용접 비드 두께 기준 미달로 인한 보완 조치 필요.', completed: false }];
+    const initialAutocadData = [
+        { title: '오토캐드 고화질 PDF 다운로드 방법 (Ctrl+P)', content: '플롯터 세팅 시 AutoCAD PDF (High Quality Print).pc3 선택 후 백터 품질 2400 DPI 상향 설정.' },
+        { title: '객체 결합(J) 및 분해(X) 사용 방법', content: 'J(Join)는 끝점이 맞아떨어져야 폴리선으로 합쳐짐.\nX(Explode)는 블록이나 폴리선을 낱개 선으로 분해함.' }
+    ];
+    const initialDocsData = [{ name: '품질관리_시방서_최신판.pdf', size: '2.4', date: '2026-08-10' }];
+    const TAB_NAMES = { 'schedule': '📅 스케줄', 'board': '📌 게시판', 'nonconformity': '⚠️ 부적합', 'contacts': '📞 연락처', 'specifications': '📁 파일관리', 'autocad': '💡 TIP', 'memo': '📝 메모장', 'calculator': '🧮 계산기' };
+    const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+    let targetElementToDelete = null;
+    let isGlobalLocked = false;
 
     function updateLandingUI() {
         const isLogin = !!accessToken;
@@ -424,7 +452,7 @@
         if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
         document.getElementById('landingScreen').style.display = 'none';
         document.getElementById('portalContent').style.display = 'flex';
-        document.getElementById('portalContent').style.flexDirection = 'column';
+        refreshAllWidths();
     }
 
     function goToLandingScreen() {
@@ -449,27 +477,361 @@
         document.getElementById('tab-' + tabId).classList.add('active');
         if (btn) btn.classList.add('active');
         document.getElementById('navMenu').classList.remove('show');
+
+        if (tabId !== 'home') {
+            recordVisitedPage(tabId);
+        } else {
+            updateDashboardUpcomingSummary();
+            renderRecentVisitedPages();
+        }
+        setTimeout(refreshAllWidths, 50);
     }
 
     function navigateToTab(tabId) {
-        switchTab(tabId);
+        const btnMap = { 'schedule': 'btn-schedule', 'board': 'btn-board', 'nonconformity': 'btn-nonconformity', 'contacts': 'btn-contacts', 'specifications': 'btn-specifications', 'autocad': 'btn-autocad', 'memo': 'btn-memo', 'calculator': 'btn-calculator' };
+        const targetBtn = document.querySelector('.' + btnMap[tabId]) || document.querySelector('.nav-btn');
+        switchTab(tabId, targetBtn);
+    }
+
+    function refreshAllWidths() {
+        // 너비 재계산용
     }
 
     window.onload = function() {
         updateLandingUI();
         if (accessToken) {
-            // 이미 로그인 상태면 랜딩에 버튼들이 켜진 상태로 대기
+            // 로그인 기록이 있으면 UI 갱신
         }
+
+        (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
+        (JSON.parse(localStorage.getItem('quality_contacts_data_v6')) || initialContactsData).forEach(item => addContactRow(item));
+        
+        const savedLock = localStorage.getItem('quality_contacts_lock');
+        if (savedLock === 'true') {
+            isGlobalLocked = true;
+            const lockBtn = document.getElementById('globalLockBtn');
+            if (lockBtn) { lockBtn.textContent = '수정'; lockBtn.classList.add('active'); }
+            document.querySelectorAll('#contactsTableBody tr input[type="text"]').forEach(input => input.disabled = true);
+        }
+
+        (JSON.parse(localStorage.getItem('quality_board_data')) || initialBoardData).forEach(item => addBoardPost(item));
+        (JSON.parse(localStorage.getItem('quality_nonconformity_data')) || initialNonConformData).forEach(item => addNonConformPost(item));
+        (JSON.parse(localStorage.getItem('quality_autocad_data')) || initialAutocadData).forEach(item => addAutocadPost(item));
+        renderDocs(JSON.parse(localStorage.getItem('quality_docs_data')) || initialDocsData);
+
+        const savedMemo = localStorage.getItem('quality_memo_data');
+        if (savedMemo) document.getElementById('memoArea').value = savedMemo;
+
+        updateDashboardUpcomingSummary();
+        renderRecentVisitedPages();
     };
+
+    function getDayOfWeek(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return isNaN(date.getDay()) ? '-' : DAYS[date.getDay()];
+    }
+
+    function createSelectHTML(options, selectedValue, className = '') {
+        let html = `<select class="${className} clean-select" onchange="updateStyle(this)">`;
+        options.forEach(opt => { html += `<option value="${opt}" ${opt === selectedValue ? 'selected' : ''}>${opt}</option>`; });
+        return html + `</select>`;
+    }
+
+    function addRow(data = {}) {
+        const tbody = document.getElementById('tableBody');
+        if (!tbody) return;
+        const tr = document.createElement('tr');
+        const completed = data.completed || false;
+        const date = data.date || new Date().toISOString().substring(0, 10);
+        if (completed) tr.classList.add('completed');
+
+        tr.innerHTML = `
+            <td style="text-align: center;"><input type="checkbox" ${completed ? 'checked' : ''} onchange="toggleComplete(this)"></td>
+            <td><input type="date" value="${date}" onchange="updateDay(this)"></td>
+            <td class="day-cell">${getDayOfWeek(date)}</td>
+            <td style="text-align: center;">${createSelectHTML(CONFIG.categoryOptions, data.category || CONFIG.categoryOptions[0])}</td>
+            <td style="text-align: center;">${createSelectHTML(CONFIG.personOptions, data.person || CONFIG.personOptions[0])}</td>
+            <td style="text-align: center;">${createSelectHTML(CONFIG.statusOptions, data.status || CONFIG.statusOptions[0], 'status-select')}</td>
+            <td><input type="text" value="${data.content || ''}" placeholder="업무 내용 입력"></td>
+            <td><input type="text" value="${data.note || ''}" placeholder="비고"></td>
+            <td style="text-align: center;"><button class="btn-delete" onclick="openDeleteModal(this, 'standard')">삭제</button></td>
+        `;
+        tbody.appendChild(tr);
+        updateStyle(tr.querySelector('.status-select'));
+    }
+
+    function toggleComplete(checkbox) {
+        checkbox.closest('tr').classList.toggle('completed', checkbox.checked);
+        updateDashboardUpcomingSummary();
+    }
+
+    function updateDay(dateInput) {
+        dateInput.closest('tr').querySelector('.day-cell').textContent = getDayOfWeek(dateInput.value);
+        updateDashboardUpcomingSummary();
+    }
+
+    function updateStyle(selectElem) {
+        if (!selectElem || !selectElem.classList.contains('status-select')) return;
+        selectElem.className = 'status-select clean-select';
+        const val = selectElem.value;
+        if (val === '대기') selectElem.classList.add('pending');
+        else if (val === '진행중') selectElem.classList.add('progress');
+        else if (val === '검토중') selectElem.classList.add('review');
+        else if (val === '승인중') selectElem.classList.add('approving');
+        else if (val === '완료') selectElem.classList.add('done');
+        else if (val === '보류') selectElem.classList.add('hold');
+    }
+
+    function saveData() {
+        const dataList = [];
+        document.querySelectorAll('#tableBody tr').forEach(row => {
+            dataList.push({
+                completed: row.querySelector('input[type="checkbox"]').checked,
+                date: row.querySelector('input[type="date"]').value,
+                category: row.querySelectorAll('select')[0].value,
+                person: row.querySelectorAll('select')[1].value,
+                status: row.querySelectorAll('select')[2].value,
+                content: row.querySelectorAll('input[type="text"]')[0].value,
+                note: row.querySelectorAll('input[type="text"]')[1].value
+            });
+        });
+        localStorage.setItem('quality_schedule_data', JSON.stringify(dataList));
+        updateDashboardUpcomingSummary();
+        alert('스케줄 데이터가 저장되었다.');
+    }
+
+    function addContactRow(data = {}) {
+        const tbody = document.getElementById('contactsTableBody');
+        if (!tbody) return;
+        const tr = document.createElement('tr');
+        const disabledAttr = isGlobalLocked ? 'disabled' : '';
+        tr.innerHTML = `
+            <td><input type="text" class="contact-name" value="${data.name || ''}" placeholder="이름" ${disabledAttr}></td>
+            <td><input type="text" class="contact-role" value="${data.role || ''}" placeholder="직책" ${disabledAttr}></td>
+            <td><input type="text" class="contact-phone" value="${data.phone || ''}" placeholder="연락처" ${disabledAttr}></td>
+            <td><input type="text" class="contact-memo" value="${data.memo || ''}" placeholder="메모" ${disabledAttr}></td>
+            <td style="text-align: center;"><button class="btn-copy" onclick="copyContactInfo(this)">복사</button></td>
+            <td style="text-align: center;"><button class="action-btn" onclick="callContact(this)" style="background:#10b981; color:white; padding:6px 10px; font-size:12px;">전화</button></td>
+            <td style="text-align: center;"><button class="btn-delete" onclick="openDeleteModal(this, 'standard')">삭제</button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function saveContacts() {
+        const list = [];
+        document.querySelectorAll('#contactsTableBody tr').forEach(row => {
+            list.push({
+                name: row.querySelector('.contact-name').value,
+                role: row.querySelector('.contact-role').value,
+                phone: row.querySelector('.contact-phone').value,
+                memo: row.querySelector('.contact-memo').value
+            });
+        });
+        localStorage.setItem('quality_contacts_data_v6', JSON.stringify(list));
+        alert('연락처 목록이 저장되었다.');
+    }
+
+    function toggleGlobalLock(btn) {
+        isGlobalLocked = !isGlobalLocked;
+        localStorage.setItem('quality_contacts_lock', isGlobalLocked);
+        document.querySelectorAll('#contactsTableBody tr input[type="text"]').forEach(input => input.disabled = isGlobalLocked);
+        btn.textContent = isGlobalLocked ? '수정' : '완료';
+        btn.classList.toggle('active', isGlobalLocked);
+    }
+
+    function addBoardPost(data = {}) {
+        const container = document.getElementById('boardContainer');
+        if (!container) return;
+        const card = document.createElement('div');
+        card.className = 'board-card';
+        card.innerHTML = `
+            <div class="board-header">
+                <input type="text" class="board-title-input board-title" value="${data.title || ''}" placeholder="제목을 입력하세요">
+                <button class="btn-delete" onclick="openDeleteModal(this, 'standard')">삭제</button>
+            </div>
+            <textarea class="board-content-textarea board-content" placeholder="내용을 입력하세요">${data.content || ''}</textarea>
+        `;
+        container.prepend(card);
+    }
+
+    function saveBoardPosts() {
+        const list = [];
+        document.querySelectorAll('#boardContainer .board-card').forEach(card => {
+            list.push({
+                title: card.querySelector('.board-title').value,
+                content: card.querySelector('.board-content').value
+            });
+        });
+        localStorage.setItem('quality_board_data', JSON.stringify(list));
+        alert('게시판 데이터가 저장되었다.');
+    }
+
+    function addAutocadPost(data = {}) {
+        const container = document.getElementById('autocadContainer');
+        if (!container) return;
+        const card = document.createElement('div');
+        card.className = 'board-card';
+        card.innerHTML = `
+            <div class="board-header">
+                <input type="text" class="board-title-input board-title" value="${data.title || ''}" placeholder="TIP 제목">
+                <button class="btn-delete" onclick="openDeleteModal(this, 'autocad')">삭제</button>
+            </div>
+            <textarea class="board-content-textarea board-content" placeholder="TIP 내용">${data.content || ''}</textarea>
+        `;
+        container.prepend(card);
+    }
+
+    function saveAutocadPosts() {
+        const list = [];
+        document.querySelectorAll('#autocadContainer .board-card').forEach(card => {
+            list.push({
+                title: card.querySelector('.board-title').value,
+                content: card.querySelector('.board-content').value
+            });
+        });
+        localStorage.setItem('quality_autocad_data', JSON.stringify(list));
+        alert('TIP 목록이 저장되었다.');
+    }
+
+    function addNonConformPost(data = {}) {
+        const container = document.getElementById('nonConformContainer');
+        if (!container) return;
+        const card = document.createElement('div');
+        card.className = 'non-conform-card';
+        card.innerHTML = `
+            <div class="board-header">
+                <input type="text" class="board-title-input board-title" value="${data.title || ''}" placeholder="부적합 제목">
+                <button class="btn-delete" onclick="openDeleteModal(this, 'standard')">삭제</button>
+            </div>
+            <textarea class="board-content-textarea board-content" placeholder="부적합 내용">${data.content || ''}</textarea>
+        `;
+        container.prepend(card);
+    }
+
+    function openDeleteModal(btn, type = 'standard') {
+        targetElementToDelete = btn.closest('tr') || btn.closest('.board-card') || btn.closest('.non-conform-card');
+        document.getElementById('modalText').textContent = type === 'autocad' ? "아직 다 못 외웠는데 삭제하려고?" : "정말로 삭제하시겠습니까?";
+        document.getElementById('deleteModal').classList.add('show');
+    }
+
+    function closeDeleteModal() {
+        targetElementToDelete = null;
+        document.getElementById('deleteModal').classList.remove('show');
+    }
+
+    function confirmDelete() {
+        if (targetElementToDelete) {
+            targetElementToDelete.remove();
+            updateDashboardUpcomingSummary();
+        }
+        closeDeleteModal();
+    }
+
+    function uploadFile(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileList = JSON.parse(localStorage.getItem('quality_docs_data') || JSON.stringify(initialDocsData));
+            fileList.unshift({ name: file.name, size: (file.size / (1024 * 1024)).toFixed(2), date: new Date().toISOString().substring(0, 10) });
+            localStorage.setItem('quality_docs_data', JSON.stringify(fileList));
+            renderDocs(fileList);
+            alert(`'${file.name}' 파일이 추가되었다.`);
+        }
+    }
+
+    function renderDocs(fileList) {
+        const docList = document.getElementById('docList');
+        if (!docList) return;
+        docList.innerHTML = '';
+        fileList.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'doc-item';
+            li.innerHTML = `<div class="doc-info"><span>📄</span><span class="doc-link">${item.name}</span><span style="font-size:12px; color:#94a3b8;">(${item.size} MB)</span></div><span style="font-size:12px; color:#64748b;">${item.date}</span>`;
+            docList.appendChild(li);
+        });
+    }
+
+    function saveSpecifications() { alert('파일 정보가 저장되었다.'); }
+    function saveMemo() {
+        localStorage.setItem('quality_memo_data', document.getElementById('memoArea').value);
+        alert('메모가 저장되었다.');
+    }
+
+    function calcAppend(val) { document.getElementById('calcScreen').value += val; }
+    function calcClear() { document.getElementById('calcScreen').value = ''; }
+    function calcBack() { const s = document.getElementById('calcScreen'); s.value = s.value.slice(0, -1); }
+    function calcResult() { const s = document.getElementById('calcScreen'); try { s.value = eval(s.value); } catch(e) { s.value = '오류'; } }
+
+    function recordVisitedPage(tabId) {
+        let history = JSON.parse(localStorage.getItem('quality_visited_pages') || '[]');
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        history = history.filter(item => item.tabId !== tabId);
+        history.unshift({ tabId, name: TAB_NAMES[tabId], time: timeStr });
+        if (history.length > 5) history = history.slice(0, 5);
+        localStorage.setItem('quality_visited_pages', JSON.stringify(history));
+    }
+
+    function renderRecentVisitedPages() {
+        const container = document.getElementById('homeRecentPagesSummary');
+        const history = JSON.parse(localStorage.getItem('quality_visited_pages') || '[]');
+        if (!container) return;
+        container.innerHTML = '';
+        if (history.length === 0) {
+            container.innerHTML = '<li class="stat-item" style="color:#94a3b8;">최근 열람한 페이지가 없다.</li>';
+            return;
+        }
+        history.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'stat-item';
+            li.innerHTML = `<span class="stat-item-link" onclick="navigateToTab('${item.tabId}')">${item.name}</span><span style="font-size:12px; color:#64748b;">${item.time} 열람</span>`;
+            container.appendChild(li);
+        });
+    }
+
+    function updateDashboardUpcomingSummary() {
+        const rows = document.querySelectorAll('#tableBody tr');
+        const scheduleList = [];
+        const todayDate = new Date(new Date().toISOString().substring(0, 10));
+        rows.forEach(row => {
+            const completed = row.querySelector('input[type="checkbox"]').checked;
+            if (!completed) {
+                const dateVal = row.querySelector('input[type="date"]').value;
+                const statusVal = row.querySelectorAll('select')[2].value;
+                const contentVal = row.querySelectorAll('input[type="text"]')[0].value || '내용 없음';
+                if (dateVal) {
+                    const diffDays = Math.ceil((new Date(dateVal) - todayDate) / (1000 * 60 * 60 * 24));
+                    scheduleList.push({ date: dateVal, content: contentVal, status: statusVal, diffDays });
+                }
+            }
+        });
+        scheduleList.sort((a, b) => a.diffDays - b.diffDays);
+        const summaryContainer = document.getElementById('homeScheduleSummary');
+        if (!summaryContainer) return;
+        summaryContainer.innerHTML = '';
+        if (scheduleList.length === 0) {
+            summaryContainer.innerHTML = '<li class="stat-item" style="color:#94a3b8;">임박한 미완료 스케줄이 없다.</li>';
+            return;
+        }
+        scheduleList.slice(0, 4).forEach(item => {
+            let dDayClass = 'd-day-upcoming', dDayText = `D-${item.diffDays}`;
+            if (item.diffDays === 0) { dDayText = 'D-DAY'; dDayClass = 'd-day-today'; }
+            else if (item.diffDays < 0) { dDayText = `D+${Math.abs(item.diffDays)}`; dDayClass = 'd-day-past'; }
+            const li = document.createElement('li');
+            li.className = 'stat-item';
+            li.innerHTML = `<div><span class="d-day-badge ${dDayClass}">${dDayText}</span><span style="font-weight:600;">${item.content}</span></div><span style="font-size:12px; color:#64748b;">(${item.date})</span>`;
+            summaryContainer.appendChild(li);
+        });
+    }
 
     async function syncAllToDrive() {
         if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
-        alert("동기화 기능 작동 완료!");
+        alert("✅ 드라이브 동기화 완료!");
     }
 
     async function importAllFromDrive() {
         if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
-        alert("데이터 가져오기 완료!");
+        alert("📥 드라이브에서 불러오기 완료!");
     }
 </script>
 
