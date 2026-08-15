@@ -1,5 +1,6 @@
 const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com';
-const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+// 💡 폴더를 자유롭게 읽고 쓸 수 있도록 권한(Scope)을 파일 전용에서 전체로 넓혔습니다.
+const SCOPES = 'https://www.googleapis.com/auth/drive';
 let accessToken = localStorage.getItem('quality_access_token') || null;
 
 function triggerGoogleLogin() {
@@ -12,8 +13,8 @@ function triggerGoogleLogin() {
                 localStorage.setItem('quality_access_token', accessToken);
                 document.getElementById('landingGoogleBtn').style.display = 'none';
                 document.getElementById('loginStatusMsg').style.display = 'block';
-                document.getElementById('landingImportBtn').style.display = 'flex'; // 💡 추가됨!
-                document.getElementById('landingSyncBtn').style.display = 'flex';
+                document.getElementById('landingImportBtn').style.display = 'flex'; // 불러오기 켜기
+                document.getElementById('landingSyncBtn').style.display = 'flex';   // 내보내기 켜기
                 document.getElementById('landingEnterBtn').style.display = 'flex';
                 alert("구글 드라이브와 연동되었습니다!");
             }
@@ -42,6 +43,7 @@ function logoutToLanding() {
     location.reload();
 }
 
+// 📤 드라이브 내보내기 (Export) - 중복 생성 방지 및 덮어쓰기 적용
 async function syncAllToDrive() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     const data = {
@@ -57,40 +59,62 @@ async function syncAllToDrive() {
     };
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
     const FOLDER_ID = '1UwPqBfs2QqLtS1jS-jw2_jeiij51FGfH'; 
-    const metadata = { name: 'quality_portal_backup.json', mimeType: 'application/json', parents: [FOLDER_ID] };
-    const form = new FormData();
-    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-    form.append('file', blob);
+    const fileName = 'quality_portal_backup.json';
 
     try {
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + accessToken },
-            body: form,
-        });
-        if (response.ok) alert("Jason_Data 폴더에 데이터가 성공적으로 동기화되었습니다!");
-        else alert("동기화 중 오류가 발생했습니다.");
-    } catch (e) { alert("동기화 실패: " + e.message); }
-}
-async function importAllFromDrive() {
-    if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
-    const FOLDER_ID = '1UwPqBfs2QqLtS1jS-jw2_jeiij51FGfH';
-    
-    try {
-        // 1. 드라이브 폴더 안에서 'quality_portal_backup.json' 파일을 찾기
-        const query = `'${FOLDER_ID}' in parents and name = 'quality_portal_backup.json' and trashed = false`;
+        // 1. 기존 백업 파일이 있는지 먼저 검색
+        const query = `'${FOLDER_ID}' in parents and name = '${fileName}' and trashed = false`;
         const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`, {
             headers: { 'Authorization': 'Bearer ' + accessToken }
         });
         const searchData = await searchRes.json();
 
+        let method = 'POST';
+        let url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+        const metadata = { name: fileName, mimeType: 'application/json' };
+
+        // 2. 파일이 이미 있으면 덮어쓰기(PATCH) 모드로 변경
+        if (searchData.files && searchData.files.length > 0) {
+            const fileId = searchData.files[0].id;
+            method = 'PATCH';
+            url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
+        } else {
+            // 없으면 새로 생성하므로 부모 폴더 지정
+            metadata.parents = [FOLDER_ID];
+        }
+
+        const form = new FormData();
+        form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+        form.append('file', blob);
+
+        const response = await fetch(url, {
+            method: method,
+            headers: { 'Authorization': 'Bearer ' + accessToken },
+            body: form,
+        });
+
+        if (response.ok) alert("✅ 드라이브에 최신 데이터가 성공적으로 백업(내보내기) 되었습니다!");
+        else alert("동기화 중 오류가 발생했습니다.");
+    } catch (e) { alert("동기화 실패: " + e.message); }
+}
+
+// 📥 드라이브 불러오기 (Import)
+async function importAllFromDrive() {
+    if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
+    const FOLDER_ID = '1UwPqBfs2QqLtS1jS-jw2_jeiij51FGfH';
+    
+    try {
+        const query = `'${FOLDER_ID}' in parents and name = 'quality_portal_backup.json' and trashed = false`;
+        const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&orderBy=createdTime desc`, {
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        const searchData = await searchRes.json();
+
         if (!searchData.files || searchData.files.length === 0) {
-            return alert("드라이브에 저장된 백업 파일이 없습니다. 먼저 '내보내기'를 진행해 주세요.");
+            return alert("드라이브에 저장된 백업 파일이 없습니다. 먼저 다른 기기에서 '내보내기'를 해주세요.");
         }
 
         const fileId = searchData.files[0].id;
-
-        // 2. 찾은 파일의 내용 다운로드하기
         const downloadRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
             headers: { 'Authorization': 'Bearer ' + accessToken }
         });
@@ -99,7 +123,6 @@ async function importAllFromDrive() {
         
         const data = await downloadRes.json();
 
-        // 3. 로컬 스토리지(localStorage)에 데이터 덮어쓰기
         if (data.schedule) localStorage.setItem('quality_schedule_data', data.schedule);
         if (data.contacts) localStorage.setItem('quality_contacts_data_v6', data.contacts);
         if (data.board) localStorage.setItem('quality_board_data', data.board);
@@ -110,8 +133,8 @@ async function importAllFromDrive() {
         if (data.visited_pages) localStorage.setItem('quality_visited_pages', data.visited_pages);
         if (data.contacts_lock) localStorage.setItem('quality_contacts_lock', data.contacts_lock);
 
-        alert("드라이브에서 최신 데이터를 성공적으로 불러왔습니다!");
-        location.reload(); // 새로고침해서 화면에 최신 데이터 반영
+        alert("📥 드라이브에서 최신 데이터를 성공적으로 불러왔습니다!");
+        location.reload(); 
     } catch (e) {
         alert("불러오기 실패: " + e.message);
     }
@@ -332,7 +355,6 @@ function getStatusClass(val) {
 }
 
 window.onload = function() {
-    // 💡 핵심: 저장된 토큰이 없으면 랜딩 화면을 띄우고, 있으면 포털을 유지함!
     if (!accessToken) {
         document.getElementById('landingScreen').style.display = 'flex';
         document.getElementById('portalContent').style.display = 'none';
