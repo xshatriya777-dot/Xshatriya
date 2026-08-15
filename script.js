@@ -12,6 +12,7 @@ function triggerGoogleLogin() {
                 localStorage.setItem('quality_access_token', accessToken);
                 document.getElementById('landingGoogleBtn').style.display = 'none';
                 document.getElementById('loginStatusMsg').style.display = 'block';
+                document.getElementById('landingImportBtn').style.display = 'flex'; // 💡 추가됨!
                 document.getElementById('landingSyncBtn').style.display = 'flex';
                 document.getElementById('landingEnterBtn').style.display = 'flex';
                 alert("구글 드라이브와 연동되었습니다!");
