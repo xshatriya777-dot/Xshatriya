@@ -125,9 +125,6 @@
     let scheduleSortAsc = true;
     let contactSortAsc = true;
     let isGlobalLocked = false;
-    let idleTimer = null;
-    const IDLE_TIMEOUT = 1800000;
-    const PASSWORD_CORRECT = "000000";
 
     function toggleMenu() {
         const menu = document.getElementById('navMenu');
@@ -154,38 +151,7 @@
     }
 
     window.addEventListener('resize', refreshAllWidths);
-
-    function resetIdleTimer() {
-        if (document.getElementById('lockModal').classList.contains('show')) return;
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(lockScreen, IDLE_TIMEOUT);
-    }
-
-    function lockScreen() {
-        document.getElementById('lockPasswordInput').value = '';
-        document.getElementById('lockErrorMsg').style.display = 'none';
-        document.getElementById('lockModal').classList.add('show');
-        document.getElementById('lockPasswordInput').focus();
-    }
-
-    function unlockScreen() {
-        const inputPwd = document.getElementById('lockPasswordInput').value;
-        if (inputPwd === PASSWORD_CORRECT) {
-            document.getElementById('lockModal').classList.remove('show');
-            resetIdleTimer();
-        } else {
-            document.getElementById('lockErrorMsg').style.display = 'block';
-            document.getElementById('lockPasswordInput').value = '';
-            document.getElementById('lockPasswordInput').focus();
-        }
-    }
-
-    window.addEventListener('mousemove', resetIdleTimer);
-    window.addEventListener('mousedown', resetIdleTimer);
-    window.addEventListener('keydown', resetIdleTimer);
-    window.addEventListener('touchstart', resetIdleTimer);
-    window.addEventListener('scroll', resetIdleTimer);
-
+    
     function formatPhoneNumber(value) {
         if (!value) return value;
         const cleaned = ('' + value).replace(/\D/g, '');
