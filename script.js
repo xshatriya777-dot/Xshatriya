@@ -127,36 +127,46 @@ async function importAllFromDrive() {
 window.onload = function() {
     updateLandingUI();
     
+    // 1. 데이터들을 먼저 화면에 싹 그려줍니다.
+    try {
+        (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
+        (JSON.parse(localStorage.getItem('quality_contacts_data_v6')) || initialContactsData).forEach(item => addContactRow(item));
+        if (localStorage.getItem('quality_contacts_lock') === 'true') {
+            isGlobalLocked = true;
+            const lockBtn = document.getElementById('globalLockBtn');
+            if (lockBtn) { lockBtn.textContent = '수정'; lockBtn.classList.add('active'); }
+            document.querySelectorAll('#contactsTableBody tr input[type="text"]').forEach(input => input.disabled = true);
+        }
+        (JSON.parse(localStorage.getItem('quality_board_data')) || initialBoardData).forEach(item => addBoardPost(item));
+        (JSON.parse(localStorage.getItem('quality_nonconformity_data')) || initialNonConformData).forEach(item => addNonConformPost(item));
+        (JSON.parse(localStorage.getItem('quality_autocad_data')) || initialAutocadData).forEach(item => addAutocadPost(item));
+        renderDocs(JSON.parse(localStorage.getItem('quality_docs_data')) || initialDocsData);
+        
+        const savedMemo = localStorage.getItem('quality_memo_data');
+        if (savedMemo) document.getElementById('memoArea').value = savedMemo;
+        
+        if (typeof resetIdleTimer === 'function') resetIdleTimer();
+        if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
+        if (typeof renderRecentVisitedPages === 'function') renderRecentVisitedPages();
+    } catch (e) {
+        console.error("데이터 로드 중 오류 발생:", e);
+    }
+
+    // 2. 데이터가 다 그려진 후, 로그인 상태에 따라 화면을 보여줍니다.
     if (accessToken) {
-        // 로그인이 되어 있으면 포털 본문을 보여줌
+        // 로그인이 되어 있다면 사용자가 직접 HOME 버튼을 누르거나 할 때까지 
+        // 혹은 원하실 때 랜딩에 머물 수 있도록 랜딩을 기본으로 두고 
+        // 자동 전환을 원치 않으시면 아래 줄을 조절할 수 있습니다.
+        // 현재는 로그인 상태면 바로 본문이 보이되, 데이터가 채워진 상태로 뜹니다.
         document.getElementById('landingScreen').style.display = 'none';
         document.getElementById('portalContent').style.display = 'block';
     } else {
-        // 로그인이 안 되어 있으면 랜딩 화면을 보여줌
         document.getElementById('landingScreen').style.display = 'flex';
         document.getElementById('portalContent').style.display = 'none';
     }
 
-    (JSON.parse(localStorage.getItem('quality_schedule_data')) || initialScheduleData).forEach(item => addRow(item));
-    (JSON.parse(localStorage.getItem('quality_contacts_data_v6')) || initialContactsData).forEach(item => addContactRow(item));
-    if (localStorage.getItem('quality_contacts_lock') === 'true') {
-        isGlobalLocked = true;
-        const lockBtn = document.getElementById('globalLockBtn');
-        if (lockBtn) { lockBtn.textContent = '수정'; lockBtn.classList.add('active'); }
-        document.querySelectorAll('#contactsTableBody tr input[type="text"]').forEach(input => input.disabled = true);
-    }
-    (JSON.parse(localStorage.getItem('quality_board_data')) || initialBoardData).forEach(item => addBoardPost(item));
-    (JSON.parse(localStorage.getItem('quality_nonconformity_data')) || initialNonConformData).forEach(item => addNonConformPost(item));
-    (JSON.parse(localStorage.getItem('quality_autocad_data')) || initialAutocadData).forEach(item => addAutocadPost(item));
-    renderDocs(JSON.parse(localStorage.getItem('quality_docs_data')) || initialDocsData);
-    const savedMemo = localStorage.getItem('quality_memo_data');
-    if (savedMemo) document.getElementById('memoArea').value = savedMemo;
-    if (typeof resetIdleTimer === 'function') resetIdleTimer();
-    if (typeof updateDashboardUpcomingSummary === 'function') updateDashboardUpcomingSummary();
-    if (typeof renderRecentVisitedPages === 'function') renderRecentVisitedPages();
     if (typeof refreshAllWidths === 'function') refreshAllWidths();
 };
-
 function getDayOfWeek(dateString) {
     if (!dateString) return '-';
     const date = new Date(dateString);
