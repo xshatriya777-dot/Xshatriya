@@ -2,7 +2,7 @@ const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleuser
 const SCOPES = 'https://www.googleapis.com/auth/drive';
 let accessToken = localStorage.getItem('quality_access_token') || null;
 
-// [랜딩 UI 업데이트] 로그인 상태에 따라 버튼 표시 제어
+// 1. 랜딩 화면 버튼 상태 제어
 function updateLandingUI() {
     const isLogin = !!accessToken;
     const gBtn = document.getElementById('landingGoogleBtn');
@@ -18,6 +18,7 @@ function updateLandingUI() {
     if (enterBtn) enterBtn.style.display = isLogin ? 'flex' : 'none';
 }
 
+// 2. 구글 로그인 실행
 function triggerGoogleLogin() {
     const tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
@@ -26,7 +27,6 @@ function triggerGoogleLogin() {
             if (tokenResponse && tokenResponse.access_token) {
                 accessToken = tokenResponse.access_token;
                 localStorage.setItem('quality_access_token', accessToken);
-                
                 alert("구글 드라이브와 연동되었습니다!");
                 enterPortal();
             }
@@ -35,6 +35,7 @@ function triggerGoogleLogin() {
     tokenClient.requestAccessToken({ prompt: 'consent' });
 }
 
+// 3. 포털 입장 및 랜딩 복귀
 function enterPortal() {
     if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
     document.getElementById('landingScreen').style.display = 'none';
@@ -46,7 +47,7 @@ function enterPortal() {
 function goToLandingScreen() {
     document.getElementById('portalContent').style.display = 'none';
     document.getElementById('landingScreen').style.display = 'flex';
-    updateLandingUI(); 
+    updateLandingUI();
 }
 
 function logoutToLanding() {
