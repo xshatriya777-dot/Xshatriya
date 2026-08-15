@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xshatriya'sWork Place </title>
+    <title>품질관리 통합포털</title>
     <!-- Google Identity Services 및 API 로드 -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js" async defer></script>
@@ -24,6 +24,76 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+        }
+
+        /* 랜딩 페이지(로그인 관문) 스타일러스 */
+        #landingScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 420px;
+            margin: auto;
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #landingScreen h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        #landingScreen p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        .login-status-box {
+            font-size: 15px;
+            font-weight: 700;
+            color: #059669;
+            background: #ecfdf5;
+            border: 1px solid #10b981;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .landing-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+        .btn-sync-action {
+            background-color: #f59e0b;
+            color: white;
+            display: none;
+        }
+        .btn-sync-action:hover { background-color: #d97706; }
+        
+        .btn-enter-portal {
+            background-color: #2563eb;
+            color: white;
+            display: none;
+        }
+        .btn-enter-portal:hover { background-color: #1d4ed8; }
+
+        /* 포털 본문 (기본은 숨김 처리, 랜딩 통과 시 표시) */
+        #portalContent {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
         }
 
         .global-header {
@@ -143,33 +213,10 @@
             color: #ffffff !important;
         }
 
-        /* 우측 헤더 정렬 그룹 */
         .header-right-group {
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        /* 구글 로그인 버튼 스타일과 동일한 흰색 배경/텍스트 타입의 동기화 버튼 */
-        .btn-sync-text {
-            background-color: #ffffff;
-            color: #3c4043;
-            border: 1px solid #dadce0;
-            padding: 0 12px;
-            height: 34px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            transition: background-color 0.2s, box-shadow 0.2s;
-        }
-        .btn-sync-text:hover {
-            background-color: #f8f9fa;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .global-footer {
@@ -191,7 +238,6 @@
 
         .container {
             width: 100%;
-            max-width: 1200px;
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -664,11 +710,6 @@
             display: none;
             font-weight: 600;
         }
-        .auth-container {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
         .btn-drive-link {
             background-color: #4285F4;
             color: white;
@@ -687,267 +728,282 @@
 </head>
 <body>
 
-<header class="global-header">
-    <div class="header-left-group">
-        <!-- 햄버거 버튼 -->
-        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
-        <span class="header-title">화성ENG(주)</span>
+<!-- [1] 랜딩 페이지 (로그인 및 동기화 관문) -->
+<div id="landingScreen">
+    <h1>화성ENG(주) 품질관리 포털</h1>
+    <p>구글 계정으로 로그인 후 드라이브와 동기화하세요.</p>
+    
+    <!-- 로그인 성공 시 표시되는 상태 텍스트 -->
+    <div id="loginStatusMsg" class="login-status-box">✔ 로그인됨</div>
+
+    <!-- 구글 로그인 버튼 영역 -->
+    <div id="landingGoogleBtnContainer" style="margin-bottom: 15px; display: flex; justify-content: center;">
+        <div id="g_id_onload" data-client_id="593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
+        <div class="g_id_signin" data-type="standard" data-size="large"></div>
     </div>
 
-    <!-- 햄버거 메뉴 내부 (홈, 각종 게시판 및 CPMS, MAIL 포함) -->
-    <nav class="nav-menu" id="navMenu">
-        <button class="nav-btn btn-home active" onclick="switchTab('home', this)">🏠 Home</button>
-        <button class="nav-btn btn-schedule" onclick="switchTab('schedule', this)">📅 스케줄</button>
-        <button class="nav-btn btn-board" onclick="switchTab('board', this)">📌 게시판</button>
-        <button class="nav-btn btn-nonconformity" onclick="switchTab('nonconformity', this)">⚠️ 부적합</button>
-        <button class="nav-btn btn-contacts" onclick="switchTab('contacts', this)">📞 연락처</button>
-        <button class="nav-btn btn-specifications" onclick="switchTab('specifications', this)">📁 파일</button>
-        <button class="nav-btn btn-autocad" onclick="switchTab('autocad', this)">💡 TIP</button>
-        <button class="nav-btn btn-memo" onclick="switchTab('memo', this)">📝 메모</button>
-        <button class="nav-btn btn-calculator" onclick="switchTab('calculator', this)">🧮 계산기</button>
-        
-        <div class="right-link-group">
-            <a href="https://stsds.secsso.net/adfs/ls/?SAMLRequest=fZJPj9owEMW%2FSuR74jiigbUAiUL%2FIFGIFtpDL5VxJovV2E4947Z8%2B3VDq24P5eDL%2BL03%2Fnlmjsr2g1xFurhH%2BBYBKftpe4dyvFiwGJz0Cg1KpyygJC2Pqw87WRWlHIInr33PXljuOxQiBDLesWy7WbDD%2Fs3u8G67%2FzKZVjPRTab5w8O0zif1WeTnWT3N624mSiirUr0qWfYJAibvgqWoFIAYYeuQlKNUKqs6L2e5qE5CyErIifjMsk3iMU7R6LoQDSg5R8IWCwSN6AsHxFXbIe%2BRs6z5TfTauNa4p%2Fsw55sI5fvTqcmbw%2FHEstUfwLV3GC2EI4TvRsPHx93fB%2BjBpv7KYkxusKbQ3vJ0rirHt%2BCr4JWq593V%2Bojc07C%2BgP7aqCcoWs%2BW818fLUf%2BsLwbOucvpfPbsNeJZLtpfG%2F0NXvrg1X0f1BRiLFi2rwbpTI6HECbzkCbePve%2F1gHUAQLRiECy%2Fjy1vXfrVo%2BAw%3D%3D&RelayState=https%3A%2F%2Fcpms.samsungsemi.com%2Fcommon%2Fidentity%2Fanonymous%2Fadfs%2FrequestIDP.do&client-request-id=63c80977-c296-4be2-df13-0080010800f2&pullStatus=0" target="_blank" class="nav-btn nav-btn-cpms">🏢 CPMS</a>
-            <a href="https://mail.daum.net" target="_blank" class="nav-btn nav-btn-daum">✉️ MAIL</a>
-        </div>
-    </nav>
+    <!-- 동기화 버튼 -->
+    <button id="landingSyncBtn" onclick="syncAllToDrive()" class="landing-btn btn-sync-action">🔄 드라이브 데이터 동기화</button>
 
-    <!-- 헤더 우측 배열: 구글 로그인 및 텍스트형 동기화 버튼 -->
-    <div class="header-right-group">
-        <div class="auth-container" style="display: flex; align-items: center; gap: 8px;">
-            <div id="g_id_onload" data-client_id="593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
-            <div id="googleSignInButton" class="g_id_signin" data-type="standard" data-size="120"></div>
-            <!-- 구글 로그인 버튼과 동일한 스타일(흰색 배경, 텍스트)의 동기화 버튼 -->
-            <button onclick="syncAllToDrive()" class="btn-sync-text">동기화</button>
-        </div>
-    </div>
-</header>
-
-<div class="container">
-    <div class="content-body">
-        
-        <div id="tab-home" class="tab-content active">
-            <div class="hero-banner">
-                <h2>품질관리 데스크</h2>
-            </div>
-
-            <div class="quick-grid">
-                <div class="quick-card" onclick="navigateToTab('schedule')">
-                    <span class="quick-icon">📅</span>
-                    <div class="quick-title">스케줄</div>
-                    <div class="quick-desc">스케줄과 진행사항 관리</div>
-                </div>
-                <div class="quick-card" onclick="navigateToTab('board')">
-                    <span class="quick-icon">📌</span>
-                    <div class="quick-title">게시판</div>
-                    <div class="quick-desc">중요 업무 기록 및 보존</div>
-                </div>
-                <div class="quick-card" onclick="navigateToTab('nonconformity')">
-                    <span class="quick-icon">⚠️</span>
-                    <div class="quick-title">부적합</div>
-                    <div class="quick-desc">부적합 사항 및 조치 관리</div>
-                </div>
-                <div class="quick-card" onclick="navigateToTab('contacts')">
-                    <span class="quick-icon">📞</span>
-                    <div class="quick-title">연락처</div>
-                    <div class="quick-desc">담당자 연락 정보</div>
-                </div>
-                <div class="quick-card" onclick="navigateToTab('specifications')">
-                    <span class="quick-icon">📁</span>
-                    <div class="quick-title">파일관리</div>
-                    <div class="quick-desc">파일 업로드 및 열람</div>
-                </div>
-                <div class="quick-card" onclick="navigateToTab('autocad')">
-                    <span class="quick-icon">💡</span>
-                    <div class="quick-title">TIP</div>
-                    <div class="quick-desc">각종 팁 모음</div>
-                </div>
-            </div>
-
-            <div class="dashboard-section">
-                <div class="dashboard-card">
-                    <h3>⏳ Deadline</h3>
-                    <ul class="stat-list" id="homeScheduleSummary"></ul>
-                </div>
-                <div class="dashboard-card">
-                    <h3>🕒 Recently Viewed Pages</h3>
-                    <ul class="stat-list" id="homeRecentPagesSummary"></ul>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-schedule" class="tab-content">
-            <header>
-                <h1>📅 스케줄</h1>
-                <div class="btn-group">
-                    <button class="action-btn btn-add" onclick="addRow()">추가</button>
-                    <button class="action-btn btn-save" onclick="saveData()">저장</button>
-                </div>
-            </header>
-
-            <div class="table-wrapper">
-                <table id="scheduleTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px; text-align: center;">완료</th>
-                            <th style="width: 130px;">날짜 ↕</th>
-                            <th style="width: 60px; text-align: center;">요일</th>
-                            <th style="width: 120px; text-align: center;">업무구분</th>
-                            <th style="width: 110px; text-align: center;">담당감리</th>
-                            <th style="width: 100px; text-align: center;">진행사항</th>
-                            <th style="width: 300px;">업무내용</th>
-                            <th style="width: 150px;">비고</th>
-                            <th style="width: 60px; text-align: center;">삭제</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="tab-board" class="tab-content">
-            <header>
-                <h1>📌 게시판</h1>
-                <div class="btn-group">
-                    <button class="action-btn btn-add" onclick="addBoardPost()">추가</button>
-                    <button class="action-btn btn-save" onclick="saveBoardPosts()">저장</button>
-                </div>
-            </header>
-
-            <div class="non-conform-toolbar">
-                <input type="text" id="boardFilterInput" class="filter-input" placeholder="🔍 제목 또는 내용 검색..." oninput="filterBoard()">
-            </div>
-
-            <div id="boardContainer" class="board-container"></div>
-        </div>
-
-        <div id="tab-nonconformity" class="tab-content">
-            <header>
-                <h1>⚠️ 부적합</h1>
-                <div class="btn-group">
-                    <button class="action-btn btn-add" onclick="addNonConformPost()">추가</button>
-                </div>
-            </header>
-
-            <div class="non-conform-toolbar">
-                <input type="text" id="nonConformFilterInput" class="filter-input" placeholder="🔍 제목 또는 내용 검색..." oninput="filterNonConformity()">
-            </div>
-
-            <div id="nonConformContainer" class="board-container"></div>
-        </div>
-
-        <div id="tab-contacts" class="tab-content">
-            <header>
-                <h1>📞 연락처</h1>
-                <div class="btn-group">
-                    <button class="action-btn btn-add" onclick="addContactRow()">추가</button>
-                    <button class="action-btn btn-save" onclick="saveContacts()">저장</button>
-                </div>
-            </header>
-
-            <div class="contacts-toolbar">
-                <input type="text" id="contactFilterInput" class="filter-input" placeholder="🔍 이름 검색..." oninput="filterContacts()" style="max-width: 180px;">
-                <button class="btn-done-all" id="globalLockBtn" onclick="toggleGlobalLock(this)">완료</button>
-            </div>
-
-            <div class="table-wrapper">
-                <table id="contactsTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 110px; cursor: pointer;" onclick="sortContacts()">성명 ↕</th>
-                            <th style="width: 70px;">직책</th>
-                            <th style="width: 120px;">연락처</th>
-                            <th style="width: auto;">메모</th>
-                            <th style="width: 80px; text-align: center;">복사</th>
-                            <th style="width: 70px; text-align: center;">전화</th>
-                            <th style="width: 60px; text-align: center;">삭제</th>
-                        </tr>
-                    </thead>
-                    <tbody id="contactsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="tab-specifications" class="tab-content">
-            <header>
-                <h1>📁 파일관리</h1>
-                <div class="btn-group">
-                    <!-- 파일 관리 페이지 내 구글 드라이브 접속 버튼 -->
-                    <a href="https://drive.google.com" target="_blank" class="btn-drive-link" title="구글 드라이브 접속">🌐</a>
-                    <button class="action-btn btn-save" onclick="saveSpecifications()">저장</button>
-                </div>
-            </header>
-            <div class="upload-card">
-                <p style="font-size: 15px; color: #475569;">PDF, Word, Excel 등 시방서 문서를 업로드하세요.</p>
-                <label for="fileInput" class="upload-label">📄 파일 선택 및 업로드</label>
-                <input type="file" id="fileInput" onchange="uploadFile(this)">
-            </div>
-            <h2 style="font-size: 16px; margin-bottom: 12px; color: #334155;">업로드된 시방서 목록</h2>
-            <ul class="doc-list" id="docList"></ul>
-        </div>
-
-        <div id="tab-autocad" class="tab-content">
-            <header>
-                <h1>💡 TIP</h1>
-                <div class="btn-group">
-                    <button class="action-btn btn-add" onclick="addAutocadPost()">추가</button>
-                    <button class="action-btn btn-save" onclick="saveAutocadPosts()">저장</button>
-                </div>
-            </header>
-            <div id="autocadContainer" class="board-container"></div>
-        </div>
-
-        <div id="tab-memo" class="tab-content">
-            <header>
-                <h1>📝 메모장</h1>
-                <div class="btn-group">
-                    <button class="action-btn btn-save" onclick="saveMemo()">저장</button>
-                </div>
-            </header>
-            <textarea id="memoArea" class="memo-textarea" placeholder="검측 시 확인 필요사항이나 특이사항 메모를 자유롭게 작성하세요..."></textarea>
-        </div>
-
-        <div id="tab-calculator" class="tab-content">
-            <header>
-                <h1>🧮 계산기</h1>
-            </header>
-            <div style="width: 100%; max-width: 320px; margin: 0 auto; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                <input type="text" id="calcScreen" style="width: 278px; min-width: 278px; max-width: 278px; height: 50px; font-size: 20px; text-align: right; margin-bottom: 12px; background: #fff; padding: 10px;" readonly>
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%;">
-                    <button class="action-btn" onclick="calcClear()" style="background: #ef4444; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">C</button>
-                    <button class="action-btn" onclick="calcAppend('/')" style="background: #e2e8f0; aspect-ratio: 1; font-size: 18px; width: 100%;">/</button>
-                    <button class="action-btn" onclick="calcAppend('*')" style="background: #e2e8f0; aspect-ratio: 1; font-size: 18px; width: 100%;">*</button>
-                    <button class="action-btn" onclick="calcAppend('%')" style="background: #e2e8f0; aspect-ratio: 1; font-size: 18px; width: 100%;">%</button>
-                    
-                    <button class="action-btn" onclick="calcAppend('7')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">7</button>
-                    <button class="action-btn" onclick="calcAppend('8')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">8</button>
-                    <button class="action-btn" onclick="calcAppend('9')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">9</button>
-                    <button class="action-btn" onclick="calcAppend('-')" style="background: #10b981; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">-</button>
-                    
-                    <button class="action-btn" onclick="calcAppend('4')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">4</button>
-                    <button class="action-btn" onclick="calcAppend('5')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">5</button>
-                    <button class="action-btn" onclick="calcAppend('6')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">6</button>
-                    <button class="action-btn" onclick="calcAppend('+')" style="background: #10b981; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">+</button>
-                    
-                    <button class="action-btn" onclick="calcAppend('1')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">1</button>
-                    <button class="action-btn" onclick="calcAppend('2')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">2</button>
-                    <button class="action-btn" onclick="calcAppend('3')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">3</button>
-                    <button class="action-btn" onclick="calcResult()" style="background: #2563eb; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">=</button>
-                    
-                    <button class="action-btn" onclick="calcAppend('0')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">0</button>
-                    <button class="action-btn" onclick="calcAppend('.')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">.</button>
-                    <button class="action-btn" onclick="calcBack()" style="background: #64748b; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">X</button>
-                    <button class="action-btn" style="visibility: hidden; pointer-events: none; aspect-ratio: 1; width: 100%;"></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 홈으로 진입 버튼 -->
+    <button id="landingEnterBtn" onclick="enterPortal()" class="landing-btn btn-enter-portal">🚀 포털 홈으로 입장하기</button>
 </div>
 
-<!-- 푸터 -->
-<footer class="global-footer">
-    <span>&copy; 2026 Xshatriya All rights reserved.</span>
-</footer>
+<!-- [2] 실제 포털 본문 (로그인 후 입장 가능) -->
+<div id="portalContent">
+    <header class="global-header">
+        <div class="header-left-group">
+            <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+            <span class="header-title">화성ENG(주)</span>
+        </div>
+
+        <nav class="nav-menu" id="navMenu">
+            <button class="nav-btn btn-home active" onclick="switchTab('home', this)">🏠 Home</button>
+            <button class="nav-btn btn-schedule" onclick="switchTab('schedule', this)">📅 스케줄</button>
+            <button class="nav-btn btn-board" onclick="switchTab('board', this)">📌 게시판</button>
+            <button class="nav-btn btn-nonconformity" onclick="switchTab('nonconformity', this)">⚠️ 부적합</button>
+            <button class="nav-btn btn-contacts" onclick="switchTab('contacts', this)">📞 연락처</button>
+            <button class="nav-btn btn-specifications" onclick="switchTab('specifications', this)">📁 파일</button>
+            <button class="nav-btn btn-autocad" onclick="switchTab('autocad', this)">💡 TIP</button>
+            <button class="nav-btn btn-memo" onclick="switchTab('memo', this)">📝 메모</button>
+            <button class="nav-btn btn-calculator" onclick="switchTab('calculator', this)">🧮 계산기</button>
+            
+            <div class="right-link-group">
+                <a href="https://stsds.secsso.net/adfs/ls/?SAMLRequest=fZJPj9owEMW%2FSuR74jiigbUAiUL%2FIFGIFtpDL5VxJovV2E4947Z8%2B3VDq24P5eDL%2BL03%2Fnlmjsr2g1xFurhH%2BBYBKftpe4dyvFiwGJz0Cg1KpyygJC2Pqw87WRWlHIInr33PXljuOxQiBDLesWy7WbDD%2Fs3u8G67%2FzKZVjPRTab5w8O0zif1WeTnWT3N624mSiirUr0qWfYJAibvgqWoFIAYYeuQlKNUKqs6L2e5qE5CyErIifjMsk3iMU7R6LoQDSg5R8IWCwSN6AsHxFXbIe%2BRs6z5TfTauNa4p%2Fsw55sI5fvTqcmbw%2FHEstUfwLV3GC2EI4TvRsPHx93fB%2BjBpv7KYkxusKbQ3vJ0rirHt%2BCr4JWq593V%2Bojc07C%2BgP7aqCcoWs%2BW818fLUf%2BsLwbOucvpfPbsNeJZLtpfG%2F0NXvrg1X0f1BRiLFi2rwbpTI6HECbzkCbePve%2F1gHUAQLRiECy%2Fjy1vXfrVo%2BAw%3D%3D&RelayState=https%3A%2F%2Fcpms.samsungsemi.com%2Fcommon%2Fidentity%2Fanonymous%2Fadfs%2FrequestIDP.do&client-request-id=63c80977-c296-4be2-df13-0080010800f2&pullStatus=0" target="_blank" class="nav-btn nav-btn-cpms">🏢 CPMS</a>
+                <a href="https://mail.daum.net" target="_blank" class="nav-btn nav-btn-daum">✉️ MAIL</a>
+            </div>
+        </nav>
+
+        <div class="header-right-group">
+            <button onclick="logoutToLanding()" class="action-btn" style="background:#ef4444; color:white; padding:6px 12px; font-size:12px;">🔒 잠금/로그아웃</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content-body">
+            
+            <div id="tab-home" class="tab-content active">
+                <div class="hero-banner">
+                    <h2>품질관리 데스크</h2>
+                </div>
+
+                <div class="quick-grid">
+                    <div class="quick-card" onclick="navigateToTab('schedule')">
+                        <span class="quick-icon">📅</span>
+                        <div class="quick-title">스케줄</div>
+                        <div class="quick-desc">스케줄과 진행사항 관리</div>
+                    </div>
+                    <div class="quick-card" onclick="navigateToTab('board')">
+                        <span class="quick-icon">📌</span>
+                        <div class="quick-title">게시판</div>
+                        <div class="quick-desc">중요 업무 기록 및 보존</div>
+                    </div>
+                    <div class="quick-card" onclick="navigateToTab('nonconformity')">
+                        <span class="quick-icon">⚠️</span>
+                        <div class="quick-title">부적합</div>
+                        <div class="quick-desc">부적합 사항 및 조치 관리</div>
+                    </div>
+                    <div class="quick-card" onclick="navigateToTab('contacts')">
+                        <span class="quick-icon">📞</span>
+                        <div class="quick-title">연락처</div>
+                        <div class="quick-desc">담당자 연락 정보</div>
+                    </div>
+                    <div class="quick-card" onclick="navigateToTab('specifications')">
+                        <span class="quick-icon">📁</span>
+                        <div class="quick-title">파일관리</div>
+                        <div class="quick-desc">파일 업로드 및 열람</div>
+                    </div>
+                    <div class="quick-card" onclick="navigateToTab('autocad')">
+                        <span class="quick-icon">💡</span>
+                        <div class="quick-title">TIP</div>
+                        <div class="quick-desc">각종 팁 모음</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <div class="dashboard-card">
+                        <h3>⏳ Deadline</h3>
+                        <ul class="stat-list" id="homeScheduleSummary"></ul>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>🕒 Recently Viewed Pages</h3>
+                        <ul class="stat-list" id="homeRecentPagesSummary"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-schedule" class="tab-content">
+                <header>
+                    <h1>📅 스케줄</h1>
+                    <div class="btn-group">
+                        <button class="action-btn btn-add" onclick="addRow()">추가</button>
+                        <button class="action-btn btn-save" onclick="saveData()">저장</button>
+                    </div>
+                </header>
+
+                <div class="table-wrapper">
+                    <table id="scheduleTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px; text-align: center;">완료</th>
+                                <th style="width: 130px;">날짜 ↕</th>
+                                <th style="width: 60px; text-align: center;">요일</th>
+                                <th style="width: 120px; text-align: center;">업무구분</th>
+                                <th style="width: 110px; text-align: center;">담당감리</th>
+                                <th style="width: 100px; text-align: center;">진행사항</th>
+                                <th style="width: 300px;">업무내용</th>
+                                <th style="width: 150px;">비고</th>
+                                <th style="width: 60px; text-align: center;">삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-board" class="tab-content">
+                <header>
+                    <h1>📌 게시판</h1>
+                    <div class="btn-group">
+                        <button class="action-btn btn-add" onclick="addBoardPost()">추가</button>
+                        <button class="action-btn btn-save" onclick="saveBoardPosts()">저장</button>
+                    </div>
+                </header>
+
+                <div class="non-conform-toolbar">
+                    <input type="text" id="boardFilterInput" class="filter-input" placeholder="🔍 제목 또는 내용 검색..." oninput="filterBoard()">
+                </div>
+
+                <div id="boardContainer" class="board-container"></div>
+            </div>
+
+            <div id="tab-nonconformity" class="tab-content">
+                <header>
+                    <h1>⚠️ 부적합</h1>
+                    <div class="btn-group">
+                        <button class="action-btn btn-add" onclick="addNonConformPost()">추가</button>
+                    </div>
+                </header>
+
+                <div class="non-conform-toolbar">
+                    <input type="text" id="nonConformFilterInput" class="filter-input" placeholder="🔍 제목 또는 내용 검색..." oninput="filterNonConformity()">
+                </div>
+
+                <div id="nonConformContainer" class="board-container"></div>
+            </div>
+
+            <div id="tab-contacts" class="tab-content">
+                <header>
+                    <h1>📞 연락처</h1>
+                    <div class="btn-group">
+                        <button class="action-btn btn-add" onclick="addContactRow()">추가</button>
+                        <button class="action-btn btn-save" onclick="saveContacts()">저장</button>
+                    </div>
+                </header>
+
+                <div class="contacts-toolbar">
+                    <input type="text" id="contactFilterInput" class="filter-input" placeholder="🔍 이름 검색..." oninput="filterContacts()" style="max-width: 180px;">
+                    <button class="btn-done-all" id="globalLockBtn" onclick="toggleGlobalLock(this)">완료</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="contactsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 110px; cursor: pointer;" onclick="sortContacts()">성명 ↕</th>
+                                <th style="width: 70px;">직책</th>
+                                <th style="width: 120px;">연락처</th>
+                                <th style="width: auto;">메모</th>
+                                <th style="width: 80px; text-align: center;">복사</th>
+                                <th style="width: 70px; text-align: center;">전화</th>
+                                <th style="width: 60px; text-align: center;">삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-specifications" class="tab-content">
+                <header>
+                    <h1>📁 파일관리</h1>
+                    <div class="btn-group">
+                        <a href="https://drive.google.com" target="_blank" class="btn-drive-link" title="구글 드라이브 접속">🌐</a>
+                        <button class="action-btn btn-save" onclick="saveSpecifications()">저장</button>
+                    </div>
+                </header>
+                <div class="upload-card">
+                    <p style="font-size: 15px; color: #475569;">PDF, Word, Excel 등 시방서 문서를 업로드하세요.</p>
+                    <label for="fileInput" class="upload-label">📄 파일 선택 및 업로드</label>
+                    <input type="file" id="fileInput" onchange="uploadFile(this)">
+                </div>
+                <h2 style="font-size: 16px; margin-bottom: 12px; color: #334155;">업로드된 시방서 목록</h2>
+                <ul class="doc-list" id="docList"></ul>
+            </div>
+
+            <div id="tab-autocad" class="tab-content">
+                <header>
+                    <h1>💡 TIP</h1>
+                    <div class="btn-group">
+                        <button class="action-btn btn-add" onclick="addAutocadPost()">추가</button>
+                        <button class="action-btn btn-save" onclick="saveAutocadPosts()">저장</button>
+                    </div>
+                </header>
+                <div id="autocadContainer" class="board-container"></div>
+            </div>
+
+            <div id="tab-memo" class="tab-content">
+                <header>
+                    <h1>📝 메모장</h1>
+                    <div class="btn-group">
+                        <button class="action-btn btn-save" onclick="saveMemo()">저장</button>
+                    </div>
+                </header>
+                <textarea id="memoArea" class="memo-textarea" placeholder="검측 시 확인 필요사항이나 특이사항 메모를 자유롭게 작성하세요..."></textarea>
+            </div>
+
+            <div id="tab-calculator" class="tab-content">
+                <header>
+                    <h1>🧮 계산기</h1>
+                </header>
+                <div style="width: 100%; max-width: 320px; margin: 0 auto; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                    <input type="text" id="calcScreen" style="width: 278px; min-width: 278px; max-width: 278px; height: 50px; font-size: 20px; text-align: right; margin-bottom: 12px; background: #fff; padding: 10px;" readonly>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%;">
+                        <button class="action-btn" onclick="calcClear()" style="background: #ef4444; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">C</button>
+                        <button class="action-btn" onclick="calcAppend('/')" style="background: #e2e8f0; aspect-ratio: 1; font-size: 18px; width: 100%;">/</button>
+                        <button class="action-btn" onclick="calcAppend('*')" style="background: #e2e8f0; aspect-ratio: 1; font-size: 18px; width: 100%;">*</button>
+                        <button class="action-btn" onclick="calcAppend('%')" style="background: #e2e8f0; aspect-ratio: 1; font-size: 18px; width: 100%;">%</button>
+                        
+                        <button class="action-btn" onclick="calcAppend('7')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">7</button>
+                        <button class="action-btn" onclick="calcAppend('8')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">8</button>
+                        <button class="action-btn" onclick="calcAppend('9')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">9</button>
+                        <button class="action-btn" onclick="calcAppend('-')" style="background: #10b981; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">-</button>
+                        
+                        <button class="action-btn" onclick="calcAppend('4')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">4</button>
+                        <button class="action-btn" onclick="calcAppend('5')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">5</button>
+                        <button class="action-btn" onclick="calcAppend('6')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">6</button>
+                        <button class="action-btn" onclick="calcAppend('+')" style="background: #10b981; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">+</button>
+                        
+                        <button class="action-btn" onclick="calcAppend('1')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">1</button>
+                        <button class="action-btn" onclick="calcAppend('2')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">2</button>
+                        <button class="action-btn" onclick="calcAppend('3')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">3</button>
+                        <button class="action-btn" onclick="calcResult()" style="background: #2563eb; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">=</button>
+                        
+                        <button class="action-btn" onclick="calcAppend('0')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">0</button>
+                        <button class="action-btn" onclick="calcAppend('.')" style="background: #fff; border: 1px solid #cbd5e1; aspect-ratio: 1; font-size: 18px; width: 100%;">.</button>
+                        <button class="action-btn" onclick="calcBack()" style="background: #64748b; color: white; aspect-ratio: 1; font-size: 18px; width: 100%;">X</button>
+                        <button class="action-btn" style="visibility: hidden; pointer-events: none; aspect-ratio: 1; width: 100%;"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="global-footer">
+        <span>&copy; 2026 Xshatriya All rights reserved.</span>
+    </footer>
+</div>
 
 <div id="deleteModal" class="modal-overlay">
     <div class="modal-box">
@@ -971,7 +1027,7 @@
 </div>
 
 <script>
-    /* [Google Drive 연동 및 로그인 상태 처리 로직] */
+    /* [Google Drive 연동 및 랜딩 페이지 제어 로직] */
     const CLIENT_ID = '593809674207-4lt599vh22f5si9hufbh9bku0odn3g2e.apps.googleusercontent.com';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
     let accessToken = null;
@@ -982,19 +1038,37 @@
             scope: SCOPES,
             callback: (tokenResponse) => {
                 accessToken = tokenResponse.access_token;
-                // 로그인 성공 시 구글 로그인 버튼 영역 숨김 처리
-                const loginBtnContainer = document.getElementById('googleSignInButton');
-                if (loginBtnContainer) {
-                    loginBtnContainer.style.display = 'none';
-                }
+                
+                // 로그인 성공 시 UI 변경
+                document.getElementById('googleSignInButton')?.remove();
+                document.getElementById('landingGoogleBtnContainer').style.display = 'none';
+                document.getElementById('loginStatusMsg').style.display = 'block';
+                document.getElementById('landingSyncBtn').style.display = 'block';
+                document.getElementById('landingEnterBtn').style.display = 'block';
+
                 alert("구글 드라이브와 연결되었습니다!");
             },
         });
         tokenClient.requestAccessToken();
     }
 
+    function enterPortal() {
+        if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
+        document.getElementById('landingScreen').style.display = 'none';
+        document.getElementById('portalContent').style.display = 'block';
+        setTimeout(refreshAllWidths, 50);
+    }
+
+    function logoutToLanding() {
+        accessToken = null;
+        document.getElementById('portalContent').style.display = 'none';
+        document.getElementById('landingScreen').style.display = 'flex';
+        // 새로고침하여 초기화
+        location.reload();
+    }
+
     async function syncAllToDrive() {
-        if (!accessToken) return alert("먼저 상단 구글 로그인을 진행해주세요.");
+        if (!accessToken) return alert("먼저 구글 로그인을 진행해주세요.");
         
         const data = {
             schedule: localStorage.getItem('quality_schedule_data'),
@@ -1009,8 +1083,6 @@
         };
 
         const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-        
-        // Jason_Data 폴더 ID 반영 완료
         const FOLDER_ID = '1UwPqBfs2QqLtS1jS-jw2_jeiij51FGfH'; 
 
         const metadata = { 
