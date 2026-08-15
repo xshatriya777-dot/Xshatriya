@@ -16,7 +16,6 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
-        /* 모바일 가로 100% 밀착을 위한 완전 초기화 */
         html, body {
             width: 100%;
             max-width: 100%;
@@ -25,9 +24,6 @@
             color: #ffffff;
             margin: 0;
             padding: 0;
-        }
-
-        body {
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -41,19 +37,21 @@
             }
         }
 
+        /* [랜딩 페이지 카드 최적화] 모바일에서 좌우 양쪽에 적당한 여백을 가질 수 있도록 수정 */
         #landingScreen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            max-width: 440px;
+            width: calc(100% - 32px); /* 모바일 화면 양옆에 16px씩 여백 확보 */
+            max-width: 400px;
             background: rgb(5, 8, 61);
-            padding: 40px 30px;
+            padding: 35px 24px;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
+            margin: 0 auto;
         }
         
         .landing-title-name {
@@ -123,7 +121,7 @@
         }
         .btn-enter-portal:hover { background-color: #1d4ed8; transform: translateY(-1px); }
 
-        /* [핵심] 모바일 화면 가로 여백 완전 제거 및 100% 밀착 */
+        /* 포털 본문 스타일 (가로 100% 꽉 채우기 유지) */
         #portalContent {
             display: none;
             width: 100%;
@@ -290,7 +288,6 @@
             min-height: calc(100vh - 120px);
         }
 
-        /* 데스크탑 화면에서는 기존처럼 여백과 박스 형태로 표시 */
         @media (min-width: 769px) {
             #portalContent {
                 max-width: 1200px;
