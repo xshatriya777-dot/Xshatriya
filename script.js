@@ -33,8 +33,16 @@ function enterPortal() {
 function goToLandingScreen() {
     document.getElementById('portalContent').style.display = 'none';
     document.getElementById('landingScreen').style.display = 'flex';
-}
 
+    // 로그인된 상태라면 버튼들을 유지해 줍니다
+    if (accessToken) {
+        document.getElementById('landingGoogleBtn').style.display = 'none';
+        document.getElementById('loginStatusMsg').style.display = 'block';
+        document.getElementById('landingImportBtn').style.display = 'flex';
+        document.getElementById('landingSyncBtn').style.display = 'flex';
+        document.getElementById('landingEnterBtn').style.display = 'flex';
+    }
+}
 function logoutToLanding() {
     accessToken = null;
     localStorage.removeItem('quality_access_token');
